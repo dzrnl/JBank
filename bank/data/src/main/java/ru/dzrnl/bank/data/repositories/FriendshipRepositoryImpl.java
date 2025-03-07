@@ -54,7 +54,7 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
      * Retrieves all friend logins for a given user.
      *
      * @param login the login of the user whose friends are to be retrieved
-     * @return a {@code set} of logins of the user's friends
+     * @return a {@code Set} of logins of the user's friends
      */
     @Override
     public Set<String> findFriendLogins(String login) {
