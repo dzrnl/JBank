@@ -86,7 +86,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             transaction.execute(account);
         } catch (IllegalStateException e) {
-            throw new IllegalArgumentException("Insufficient funds for account " + accountId);
+            throw new IllegalStateException("Insufficient funds for account " + accountId);
         }
     }
 
@@ -131,7 +131,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             fromTransaction.execute(fromAccount);
         } catch (IllegalStateException e) {
-            throw new IllegalArgumentException("Insufficient funds for account " + fromAccountId);
+            throw new IllegalStateException("Insufficient funds for account " + fromAccountId);
         }
 
         amount = calculateTransferAmountWithFee(fromAccount, toAccount, amount);
