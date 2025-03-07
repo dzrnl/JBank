@@ -2,21 +2,24 @@ package ru.dzrnl.bank.business.models.user;
 
 import java.util.Objects;
 
-public class User {
-    private final String login;
-    private String name;
-    private int age;
-    private Gender gender;
-    private HairColor hairColor;
+/**
+ * Represents a user with basic personal information.
+ *
+ * @param login     unique login for the user
+ * @param name      the name of the user
+ * @param age       the age of the user
+ * @param gender    the gender of the user
+ * @param hairColor the hair color of the user
+ */
+public record User(String login, String name, int age, Gender gender, HairColor hairColor) {
 
-    public User(String login, String name, int age, Gender gender, HairColor hairColor) {
-        this.login = login;
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-        this.hairColor = hairColor;
-    }
-
+    /**
+     * Checks if two users are equal based on their login.
+     * Two users are considered equal if they have the same login.
+     *
+     * @param obj the object to compare with
+     * @return {@code true} if the logins match, otherwise {@code false}
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -25,28 +28,13 @@ public class User {
         return Objects.equals(login, other.login);
     }
 
+    /**
+     * Returns hash code based on the login.
+     *
+     * @return the hash code of the login
+     */
     @Override
     public int hashCode() {
         return login.hashCode();
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public HairColor getHairColor() {
-        return hairColor;
     }
 }
