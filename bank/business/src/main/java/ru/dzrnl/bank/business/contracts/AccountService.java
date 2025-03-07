@@ -39,6 +39,7 @@ public interface AccountService {
      *
      * @param accountId the ID of the account to withdraw money from
      * @param amount    the amount of money to withdraw
+     * @throws IllegalStateException if a withdrawal is attempted with insufficient funds
      */
     void withdrawMoney(long accountId, long amount);
 
@@ -56,6 +57,7 @@ public interface AccountService {
      * @param fromAccountId the ID of the account from which the money is being transferred
      * @param toAccountId   the ID of the account to which the money is being transferred
      * @param amount        the amount of money to transfer
+     * @throws IllegalStateException if a withdrawal is attempted with insufficient funds
      */
     void transferMoney(long fromAccountId, long toAccountId, long amount);
 }

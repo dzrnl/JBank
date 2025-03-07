@@ -71,6 +71,7 @@ public class AccountServiceImpl implements AccountService {
      *
      * @param accountId the ID of the account to withdraw money from
      * @param amount    the amount of money to withdraw
+     * @throws IllegalStateException if a withdrawal is attempted with insufficient funds
      */
     @Override
     public void withdrawMoney(long accountId, long amount) {
@@ -82,7 +83,11 @@ public class AccountServiceImpl implements AccountService {
                 TransactionType.WITHDRAW
         );
 
-        transaction.execute(account);
+        try {
+            transaction.execute(account);
+        } catch (IllegalStateException e) {
+            throw new IllegalArgumentException("Insufficient funds for account " + accountId);
+        }
     }
 
     /**
@@ -110,6 +115,7 @@ public class AccountServiceImpl implements AccountService {
      * @param fromAccountId the ID of the account from which the money is being transferred
      * @param toAccountId   the ID of the account to which the money is being transferred
      * @param amount        the amount of money to transfer
+     * @throws IllegalStateException if a withdrawal is attempted with insufficient funds
      */
     @Override
     public void transferMoney(long fromAccountId, long toAccountId, long amount) {
@@ -122,7 +128,11 @@ public class AccountServiceImpl implements AccountService {
                 TransactionType.WITHDRAW
         );
 
-        fromTransaction.execute(fromAccount);
+        try {
+            fromTransaction.execute(fromAccount);
+        } catch (IllegalStateException e) {
+            throw new IllegalArgumentException("Insufficient funds for account " + fromAccountId);
+        }
 
         amount = calculateTransferAmountWithFee(fromAccount, toAccount, amount);
 
@@ -142,8 +152,8 @@ public class AccountServiceImpl implements AccountService {
      * - Non-friends pay a 10% fee.
      *
      * @param fromAccount the account from which money is being transferred
-     * @param toAccount the account to which money is being transferred
-     * @param amount the original transfer amount
+     * @param toAccount   the account to which money is being transferred
+     * @param amount      the original transfer amount
      * @return the transfer amount after applying the fee
      */
     private long calculateTransferAmountWithFee(Account fromAccount, Account toAccount, long amount) {

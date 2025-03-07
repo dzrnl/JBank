@@ -4,6 +4,7 @@ import ru.dzrnl.bank.business.models.user.Gender;
 import ru.dzrnl.bank.business.models.user.HairColor;
 import ru.dzrnl.bank.business.models.user.User;
 
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -30,7 +31,7 @@ public interface UserService {
      *
      * @param login the login of the user to retrieve
      * @return the user associated with the provided login
-     * @throws IllegalArgumentException if no user with the given login is found
+     * @throws NoSuchElementException if no user with the given login is found
      */
     User getUserByLogin(String login);
 
