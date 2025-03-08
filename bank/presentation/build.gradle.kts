@@ -20,6 +20,6 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.named("build") {
+tasks.build {
     dependsOn(tasks.javadoc)
 }

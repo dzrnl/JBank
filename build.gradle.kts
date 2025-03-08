@@ -2,6 +2,6 @@ plugins {
     java
 }
 
-tasks.named("build") {
+tasks.build {
     dependsOn(tasks.javadoc)
 }
