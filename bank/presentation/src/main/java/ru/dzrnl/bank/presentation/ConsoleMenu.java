@@ -133,7 +133,7 @@ public class ConsoleMenu {
             User user = userService.getUserByLogin(login);
             System.out.println(user);
         } catch (NoSuchElementException e) {
-            System.out.println("User not found.");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -147,8 +147,15 @@ public class ConsoleMenu {
         System.out.print("Enter second user login: ");
         String friendLogin = scanner.nextLine();
 
-        friendshipService.addFriend(userLogin, friendLogin);
-        System.out.println("Friend added successfully.");
+        try {
+            userService.getUserByLogin(userLogin);
+            userService.getUserByLogin(friendLogin);
+
+            friendshipService.addFriend(userLogin, friendLogin);
+            System.out.println("Friend added successfully.");
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -161,8 +168,15 @@ public class ConsoleMenu {
         System.out.print("Enter second user login: ");
         String friendLogin = scanner.nextLine();
 
-        friendshipService.removeFriend(userLogin, friendLogin);
-        System.out.println("Friend removed successfully.");
+        try {
+            userService.getUserByLogin(userLogin);
+            userService.getUserByLogin(friendLogin);
+
+            friendshipService.removeFriend(userLogin, friendLogin);
+            System.out.println("Friend removed successfully.");
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -171,6 +185,13 @@ public class ConsoleMenu {
     private void viewFriends() {
         System.out.print("Enter user login to view friends: ");
         String userLogin = scanner.nextLine();
+
+        try {
+            userService.getUserByLogin(userLogin);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
         Set<String> friends = friendshipService.getFriendLogins(userLogin);
 
@@ -188,8 +209,14 @@ public class ConsoleMenu {
         System.out.print("Enter user login to create an account: ");
         String userLogin = scanner.nextLine();
 
-        accountService.createAccount(userLogin);
-        System.out.println("Account created successfully.");
+        try {
+            userService.getUserByLogin(userLogin);
+
+            accountService.createAccount(userLogin);
+            System.out.println("Account created successfully.");
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -198,6 +225,13 @@ public class ConsoleMenu {
     private void viewAccounts() {
         System.out.print("Enter user login to view accounts: ");
         String userLogin = scanner.nextLine();
+
+        try {
+            userService.getUserByLogin(userLogin);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
         Set<Account> accounts = accountService.getAllUserAccounts(userLogin);
 
@@ -219,8 +253,12 @@ public class ConsoleMenu {
         long amount = scanner.nextLong();
         scanner.nextLine();
 
-        accountService.depositMoney(accountId, amount);
-        System.out.println("Deposit successful.");
+        try {
+            accountService.depositMoney(accountId, amount);
+            System.out.println("Deposit successful.");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -237,7 +275,7 @@ public class ConsoleMenu {
         try {
             accountService.withdrawMoney(accountId, amount);
             System.out.println("Withdrawal successful.");
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -259,7 +297,7 @@ public class ConsoleMenu {
         try {
             accountService.transferMoney(fromAccountId, toAccountId, amount);
             System.out.println("Transfer successful.");
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             System.out.println(e.getMessage());
         }
     }
