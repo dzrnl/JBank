@@ -18,6 +18,12 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     private long idCounter = 0;
 
     /**
+     * Default constructor for TransactionRepositoryImpl class.
+     */
+    public TransactionRepositoryImpl() {
+    }
+
+    /**
      * Creates and stores a new transaction.
      *
      * @param accountId the account ID for which the transaction is being created

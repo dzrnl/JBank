@@ -13,6 +13,12 @@ public class UserRepositoryImpl implements UserRepository {
     private final Map<String, User> users = new HashMap<>();
 
     /**
+     * Default constructor for UserRepositoryImpl class.
+     */
+    public UserRepositoryImpl() {
+    }
+
+    /**
      * Saves a user in the repository.
      *
      * @param user the user to save

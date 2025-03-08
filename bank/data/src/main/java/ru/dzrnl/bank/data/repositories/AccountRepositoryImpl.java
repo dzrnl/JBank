@@ -18,6 +18,12 @@ public class AccountRepositoryImpl implements AccountRepository {
     private long idCounter = 0;
 
     /**
+     * Default constructor for AccountRepositoryImpl class.
+     */
+    public AccountRepositoryImpl() {
+    }
+
+    /**
      * Creates a new account for a user.
      *
      * @param ownerLogin the login of the account's owner

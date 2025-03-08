@@ -15,6 +15,12 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     private final Set<Friendship> friendships = new HashSet<>();
 
     /**
+     * Default constructor for FriendshipRepositoryImpl class.
+     */
+    public FriendshipRepositoryImpl() {
+    }
+
+    /**
      * Adds a friendship between two users.
      * A friendship is bidirectional, meaning both users will be linked.
      *

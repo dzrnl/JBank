@@ -51,13 +51,17 @@ public class Account {
     }
 
     /**
-     * @return account ID
+     * Returns the account ID for this account.
+     *
+     * @return the account ID
      */
     public long getId() {
         return id;
     }
 
     /**
+     * Returns the current balance for this account.
+     *
      * @return current account balance
      */
     public long getBalance() {
@@ -65,6 +69,8 @@ public class Account {
     }
 
     /**
+     * Returns the owner's login for this account.
+     *
      * @return owner's login
      */
     public String getOwnerLogin() {
