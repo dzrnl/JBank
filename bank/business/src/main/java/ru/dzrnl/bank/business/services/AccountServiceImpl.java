@@ -71,7 +71,8 @@ public class AccountServiceImpl implements AccountService {
      *
      * @param accountId the ID of the account to withdraw money from
      * @param amount    the amount of money to withdraw
-     * @throws IllegalStateException if a withdrawal is attempted with insufficient funds
+     * @throws IllegalArgumentException if no account with the given ID is found
+     * @throws IllegalStateException    if a withdrawal is attempted with insufficient funds
      */
     @Override
     public void withdrawMoney(long accountId, long amount) {
@@ -95,6 +96,7 @@ public class AccountServiceImpl implements AccountService {
      *
      * @param accountId the ID of the account to deposit money into
      * @param amount    the amount of money to deposit
+     * @throws IllegalArgumentException if no account with the given ID is found
      */
     @Override
     public void depositMoney(long accountId, long amount) {
@@ -115,7 +117,8 @@ public class AccountServiceImpl implements AccountService {
      * @param fromAccountId the ID of the account from which the money is being transferred
      * @param toAccountId   the ID of the account to which the money is being transferred
      * @param amount        the amount of money to transfer
-     * @throws IllegalStateException if a withdrawal is attempted with insufficient funds
+     * @throws IllegalArgumentException if no account with the given ID is found
+     * @throws IllegalStateException    if a withdrawal is attempted with insufficient funds
      */
     @Override
     public void transferMoney(long fromAccountId, long toAccountId, long amount) {
