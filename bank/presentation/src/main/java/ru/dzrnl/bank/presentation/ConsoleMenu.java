@@ -12,13 +12,22 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
 
+/**
+ * Console-based menu for interacting with the banking system.
+ */
 public class ConsoleMenu {
     private final Scanner scanner;
-
     private final UserService userService;
     private final FriendshipService friendshipService;
     private final AccountService accountService;
 
+    /**
+     * Constructs a ConsoleMenu with the required services.
+     *
+     * @param userService        Service for user operations.
+     * @param friendshipService  Service for friendship management.
+     * @param accountService     Service for account management.
+     */
     public ConsoleMenu(UserService userService, FriendshipService friendshipService, AccountService accountService) {
         this.scanner = new Scanner(System.in);
 
@@ -27,6 +36,9 @@ public class ConsoleMenu {
         this.accountService = accountService;
     }
 
+    /**
+     * Runs the console menu, allowing the user to select and execute actions.
+     */
     public void run() {
         while (true) {
             System.out.println("\nSelect action");
@@ -46,45 +58,28 @@ public class ConsoleMenu {
             scanner.nextLine();
 
             switch (choice) {
-                case 1:
-                    createUser();
-                    break;
-                case 2:
-                    viewUser();
-                    break;
-                case 3:
-                    addFriend();
-                    break;
-                case 4:
-                    removeFriend();
-                    break;
-                case 5:
-                    viewFriends();
-                    break;
-                case 6:
-                    createAccount();
-                    break;
-                case 7:
-                    viewAccounts();
-                    break;
-                case 8:
-                    depositMoney();
-                    break;
-                case 9:
-                    withdrawMoney();
-                    break;
-                case 10:
-                    transferMoney();
-                    break;
-                case 0:
+                case 1 -> createUser();
+                case 2 -> viewUser();
+                case 3 -> addFriend();
+                case 4 -> removeFriend();
+                case 5 -> viewFriends();
+                case 6 -> createAccount();
+                case 7 -> viewAccounts();
+                case 8 -> depositMoney();
+                case 9 -> withdrawMoney();
+                case 10 -> transferMoney();
+                case 0 -> {
                     System.out.println("Goodbye!");
                     return;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+                }
+                default -> System.out.println("Invalid choice. Please try again.");
             }
         }
     }
 
+    /**
+     * Prompts the user to enter details and creates a new user.
+     */
     private void createUser() {
         System.out.print("Enter login: ");
         String login = scanner.nextLine();
@@ -127,6 +122,9 @@ public class ConsoleMenu {
         }
     }
 
+    /**
+     * Displays details of a user by login.
+     */
     private void viewUser() {
         System.out.print("Enter login to view: ");
         String login = scanner.nextLine();
@@ -139,6 +137,9 @@ public class ConsoleMenu {
         }
     }
 
+    /**
+     * Adds a friend connection between two users.
+     */
     private void addFriend() {
         System.out.print("Enter first user login: ");
         String userLogin = scanner.nextLine();
@@ -150,6 +151,9 @@ public class ConsoleMenu {
         System.out.println("Friend added successfully.");
     }
 
+    /**
+     * Removes a friend connection between two users.
+     */
     private void removeFriend() {
         System.out.print("Enter first user login: ");
         String userLogin = scanner.nextLine();
@@ -161,6 +165,9 @@ public class ConsoleMenu {
         System.out.println("Friend removed successfully.");
     }
 
+    /**
+     * Displays the friends of a user.
+     */
     private void viewFriends() {
         System.out.print("Enter user login to view friends: ");
         String userLogin = scanner.nextLine();
@@ -174,6 +181,9 @@ public class ConsoleMenu {
         }
     }
 
+    /**
+     * Creates a new bank account for a user.
+     */
     private void createAccount() {
         System.out.print("Enter user login to create an account: ");
         String userLogin = scanner.nextLine();
@@ -182,6 +192,9 @@ public class ConsoleMenu {
         System.out.println("Account created successfully.");
     }
 
+    /**
+     * Displays all accounts of a user.
+     */
     private void viewAccounts() {
         System.out.print("Enter user login to view accounts: ");
         String userLogin = scanner.nextLine();
@@ -195,6 +208,9 @@ public class ConsoleMenu {
         }
     }
 
+    /**
+     * Deposits money into a specified account.
+     */
     private void depositMoney() {
         System.out.print("Enter account ID to deposit money: ");
         long accountId = scanner.nextLong();
@@ -207,6 +223,9 @@ public class ConsoleMenu {
         System.out.println("Deposit successful.");
     }
 
+    /**
+     * Withdraws money from a specified account.
+     */
     private void withdrawMoney() {
         System.out.print("Enter account ID to withdraw money: ");
         long accountId = scanner.nextLong();
@@ -223,6 +242,9 @@ public class ConsoleMenu {
         }
     }
 
+    /**
+     * Transfers money between two accounts.
+     */
     private void transferMoney() {
         System.out.print("Enter user account ID: ");
         long fromAccountId = scanner.nextLong();

@@ -15,7 +15,24 @@ import ru.dzrnl.bank.data.repositories.FriendshipRepositoryImpl;
 import ru.dzrnl.bank.data.repositories.TransactionRepositoryImpl;
 import ru.dzrnl.bank.data.repositories.UserRepositoryImpl;
 
+/**
+ * Main class to initiate the program.
+ * Initializes services and repositories, then runs the console menu for the user interaction.
+ */
 public class Program {
+
+    /**
+     * Default constructor for Program class.
+     */
+    public Program() {
+    }
+
+    /**
+     * Main method that sets up the application by initializing necessary repositories,
+     * services, and then running the console menu.
+     *
+     * @param args Command-line arguments
+     */
     public static void main(String[] args) {
         UserRepository userRepository = new UserRepositoryImpl();
         FriendshipRepository friendshipRepository = new FriendshipRepositoryImpl();
