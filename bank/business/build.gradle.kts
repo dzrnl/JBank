@@ -18,3 +18,7 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks.named("build") {
+    dependsOn(tasks.javadoc)
+}
