@@ -8,6 +8,7 @@ import ru.dzrnl.bank.business.models.account.TransactionType;
 import ru.dzrnl.bank.business.repositories.AccountRepository;
 import ru.dzrnl.bank.business.repositories.TransactionRepository;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -63,7 +64,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Set<Account> getAllUserAccounts(String userLogin) {
-        return accountRepository.findAllUserAccounts(userLogin);
+        return new HashSet<>(accountRepository.findAllUserAccounts(userLogin));
     }
 
     /**
