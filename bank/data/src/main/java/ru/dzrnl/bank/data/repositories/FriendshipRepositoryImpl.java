@@ -4,8 +4,8 @@ import ru.dzrnl.bank.business.repositories.FriendshipRepository;
 import ru.dzrnl.bank.data.entities.Friendship;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link FriendshipRepository} for managing user friendships.
@@ -60,13 +60,13 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
      * Retrieves all friend logins for a given user.
      *
      * @param login the login of the user whose friends are to be retrieved
-     * @return a {@code Set} of logins of the user's friends
+     * @return a {@code List} of logins of the user's friends
      */
     @Override
-    public Set<String> findFriendLogins(String login) {
+    public List<String> findFriendLogins(String login) {
         return friendships.stream()
                 .filter(f -> f.containsUser(login))
                 .map(f -> f.getFriendFor(login))
-                .collect(Collectors.toSet());
+                .toList();
     }
 }

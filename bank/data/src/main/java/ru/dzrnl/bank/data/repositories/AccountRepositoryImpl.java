@@ -3,11 +3,7 @@ package ru.dzrnl.bank.data.repositories;
 import ru.dzrnl.bank.business.models.account.Account;
 import ru.dzrnl.bank.business.repositories.AccountRepository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Implementation of the {@link AccountRepository} interface for managing accounts.
@@ -51,13 +47,13 @@ public class AccountRepositoryImpl implements AccountRepository {
      * Retrieves all accounts associated with a specific user.
      *
      * @param ownerLogin the login of the account's owner
-     * @return a {@code Set} of all accounts belonging to the user
+     * @return a {@code List} of all accounts belonging to the user
      */
     @Override
-    public Set<Account> findAllUserAccounts(String ownerLogin) {
+    public List<Account> findAllUserAccounts(String ownerLogin) {
         return accounts.values().stream()
                 .filter(account -> account.getOwnerLogin().equals(ownerLogin))
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     /**

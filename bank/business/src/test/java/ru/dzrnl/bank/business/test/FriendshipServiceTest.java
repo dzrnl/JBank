@@ -5,7 +5,8 @@ import ru.dzrnl.bank.business.contracts.FriendshipService;
 import ru.dzrnl.bank.business.repositories.FriendshipRepository;
 import ru.dzrnl.bank.business.services.FriendshipServiceImpl;
 
-import java.util.Set;
+import java.util.HashSet;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -56,13 +57,13 @@ public class FriendshipServiceTest {
 
     @Test
     public void shouldGetAllFriends() {
-        var friendLogins = Set.of(secondDefaultUserLogin, thirdDefaultUserLogin);
+        var friendLogins = List.of(secondDefaultUserLogin, thirdDefaultUserLogin);
 
         FriendshipRepository mockRepo = mock(FriendshipRepository.class);
         when(mockRepo.findFriendLogins(defaultUserLogin)).thenReturn(friendLogins);
 
         FriendshipService friendshipService = new FriendshipServiceImpl(mockRepo);
 
-        assertEquals(friendshipService.getFriendLogins(defaultUserLogin), friendLogins);
+        assertEquals(friendshipService.getFriendLogins(defaultUserLogin), new HashSet<>(friendLogins));
     }
 }

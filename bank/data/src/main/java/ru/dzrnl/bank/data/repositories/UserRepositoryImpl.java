@@ -46,10 +46,10 @@ public class UserRepositoryImpl implements UserRepository {
     /**
      * Finds all users in the repository.
      *
-     * @return a {@code Set} of all users
+     * @return a {@code List} of all users
      */
     @Override
-    public Set<User> findAllUsers() {
-        return new HashSet<>(users.values());
+    public List<User> findAllUsers() {
+        return users.values().stream().toList();
     }
 }

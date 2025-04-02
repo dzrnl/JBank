@@ -10,8 +10,9 @@ import ru.dzrnl.bank.business.repositories.AccountRepository;
 import ru.dzrnl.bank.business.repositories.TransactionRepository;
 import ru.dzrnl.bank.business.services.AccountServiceImpl;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -76,7 +77,7 @@ public class AccountServiceTest {
 
     @Test
     public void shouldGetAllUserAccounts() {
-        var userAccounts = Set.of(new Account(1, defaultUserLogin), new Account(2, defaultUserLogin));
+        var userAccounts = List.of(new Account(1, defaultUserLogin), new Account(2, defaultUserLogin));
 
         AccountRepository mockAccountRepo = mock(AccountRepository.class);
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
@@ -86,7 +87,7 @@ public class AccountServiceTest {
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
 
-        assertEquals(accountService.getAllUserAccounts(defaultUserLogin), userAccounts);
+        assertEquals(accountService.getAllUserAccounts(defaultUserLogin), new HashSet<>(userAccounts));
 
         verify(mockAccountRepo, times(1)).findAllUserAccounts(defaultUserLogin);
     }

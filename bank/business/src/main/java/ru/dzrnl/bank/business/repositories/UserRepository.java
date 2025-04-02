@@ -2,8 +2,8 @@ package ru.dzrnl.bank.business.repositories;
 
 import ru.dzrnl.bank.business.models.user.User;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Provides operations for managing users in a repository.
@@ -29,7 +29,7 @@ public interface UserRepository {
     /**
      * Finds all users in the repository.
      *
-     * @return a {@code Set} of all users
+     * @return a {@code List} of all users
      */
-    Set<User> findAllUsers();
+    List<User> findAllUsers();
 }

@@ -2,8 +2,8 @@ package ru.dzrnl.bank.business.repositories;
 
 import ru.dzrnl.bank.business.models.account.Account;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Provides operations for managing accounts in a repository.
@@ -30,7 +30,7 @@ public interface AccountRepository {
      * Retrieves all accounts associated with a specific user.
      *
      * @param ownerLogin the login of the account's owner
-     * @return a {@code Set} of all accounts belonging to the user
+     * @return a {@code List} of all accounts belonging to the user
      */
-    Set<Account> findAllUserAccounts(String ownerLogin);
+    List<Account> findAllUserAccounts(String ownerLogin);
 }
