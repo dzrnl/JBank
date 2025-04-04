@@ -27,6 +27,21 @@ public class Account {
     }
 
     /**
+     * Creates a new account.
+     *
+     * @param id                 unique account identifier
+     * @param ownerLogin         login of the account owner
+     * @param balance            the initial balance of the account
+     * @param transactionHistory the list of transactions associated with this account
+     */
+    public Account(long id, String ownerLogin, long balance, ArrayList<Transaction> transactionHistory) {
+        this.id = id;
+        this.ownerLogin = ownerLogin;
+        this.balance = balance;
+        this.transactionHistory = transactionHistory;
+    }
+
+    /**
      * Checks if two accounts are equal based on their ID.
      *
      * @param obj object to compare with

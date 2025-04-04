@@ -19,6 +19,13 @@ public interface AccountRepository {
     Account createAccount(String ownerLogin);
 
     /**
+     * Updates the details of an existing account.
+     *
+     * @param account the account to update, containing the updated information
+     */
+    void updateAccount(Account account);
+
+    /**
      * Retrieves an account by its unique ID.
      *
      * @param accountId the ID of the account to retrieve

@@ -11,6 +11,8 @@
 
     <mapping class="ru.dzrnl.bank.data.entities.UserEntity"/>
     <mapping class="ru.dzrnl.bank.data.entities.FriendshipEntity"/>
+    <mapping class="ru.dzrnl.bank.data.entities.TransactionEntity"/>
+    <mapping class="ru.dzrnl.bank.data.entities.AccountEntity"/>
 
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->

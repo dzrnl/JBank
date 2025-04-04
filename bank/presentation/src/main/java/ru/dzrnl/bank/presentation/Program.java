@@ -45,8 +45,8 @@ public class Program {
 
         UserRepository userRepository = new UserRepositoryImpl(sessionFactory);
         FriendshipRepository friendshipRepository = new FriendshipRepositoryImpl(sessionFactory);
-        TransactionRepository transactionRepository = new TransactionRepositoryImpl();
-        AccountRepository accountRepository = new AccountRepositoryImpl();
+        TransactionRepository transactionRepository = new TransactionRepositoryImpl(sessionFactory);
+        AccountRepository accountRepository = new AccountRepositoryImpl(sessionFactory);
 
         UserService userService = new UserServiceImpl(userRepository);
         FriendshipService friendshipService = new FriendshipServiceImpl(friendshipRepository);
