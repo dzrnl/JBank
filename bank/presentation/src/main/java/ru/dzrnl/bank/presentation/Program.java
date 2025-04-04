@@ -44,7 +44,7 @@ public class Program {
         SessionFactory sessionFactory = config.buildSessionFactory();
 
         UserRepository userRepository = new UserRepositoryImpl(sessionFactory);
-        FriendshipRepository friendshipRepository = new FriendshipRepositoryImpl();
+        FriendshipRepository friendshipRepository = new FriendshipRepositoryImpl(sessionFactory);
         TransactionRepository transactionRepository = new TransactionRepositoryImpl();
         AccountRepository accountRepository = new AccountRepositoryImpl();
 
