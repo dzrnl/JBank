@@ -1,55 +1,81 @@
 package ru.dzrnl.bank.data.repositories;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import ru.dzrnl.bank.business.models.user.User;
 import ru.dzrnl.bank.business.repositories.UserRepository;
+import ru.dzrnl.bank.data.entities.UserEntity;
+import ru.dzrnl.bank.data.mappers.UserMapper;
 
 import java.util.*;
 
 /**
- * Implementation of {@link UserRepository} for managing users.
- * Uses an in-memory storage ({@code HashMap}) to store users.
+ * Implementation of {@link UserRepository} for PostgreSQL using Hibernate.
  */
 public class UserRepositoryImpl implements UserRepository {
-    private final Map<String, User> users = new HashMap<>();
+    private final SessionFactory sessionFactory;
 
     /**
-     * Default constructor for UserRepositoryImpl class.
+     * Constructs a UserRepositoryImpl.
+     *
+     * @param sessionFactory Hibernate session factory
      */
-    public UserRepositoryImpl() {
+    public UserRepositoryImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     /**
-     * Saves a user in the repository.
+     * Saves a user in the database.
      *
      * @param user the user to save
-     * @throws IllegalArgumentException if a user with the same login already exists
+     * @throws RuntimeException if an error occurs during the transaction
      */
     @Override
     public void saveUser(User user) {
-        if (users.containsKey(user.login())) {
-            throw new IllegalArgumentException("User with login '" + user.login() + "' already exists.");
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            UserEntity entity = UserMapper.toEntity(user);
+            session.persist(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
         }
-        users.put(user.login(), user);
     }
 
     /**
-     * Finds a user by their login.
+     * Finds a user by their login in the database.
      *
      * @param login the login of the user to find
      * @return an {@code Optional} containing the user if found, otherwise an empty {@code Optional}
+     * @throws RuntimeException if a database access error occurs
      */
     @Override
     public Optional<User> findUserByLogin(String login) {
-        return Optional.ofNullable(users.get(login));
+        try (Session session = sessionFactory.openSession()) {
+            Query<UserEntity> query = session.createQuery(
+                    "FROM UserEntity WHERE login = :login", UserEntity.class);
+            query.setParameter("login", login);
+
+            return query.getResultList().stream().findFirst().map(UserMapper::toDomain);
+        }
     }
 
     /**
-     * Finds all users in the repository.
+     * Retrieves all users from the database.
      *
-     * @return a {@code Set} of all users
+     * @return a {@code List} of all users
+     * @throws RuntimeException if a database access error occurs
      */
     @Override
-    public Set<User> findAllUsers() {
-        return new HashSet<>(users.values());
+    public List<User> findAllUsers() {
+        try (Session session = sessionFactory.openSession()) {
+            Query<UserEntity> query = session.createQuery("FROM UserEntity", UserEntity.class);
+
+            return query.getResultList().stream().map(UserMapper::toDomain).toList();
+        }
     }
 }

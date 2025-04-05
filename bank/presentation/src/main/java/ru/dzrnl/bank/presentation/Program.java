@@ -1,5 +1,8 @@
 package ru.dzrnl.bank.presentation;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
+import org.hibernate.cfg.Configuration;
 import ru.dzrnl.bank.business.contracts.AccountService;
 import ru.dzrnl.bank.business.contracts.FriendshipService;
 import ru.dzrnl.bank.business.contracts.UserService;
@@ -34,10 +37,16 @@ public class Program {
      * @param args Command-line arguments
      */
     public static void main(String[] args) {
-        UserRepository userRepository = new UserRepositoryImpl();
-        FriendshipRepository friendshipRepository = new FriendshipRepositoryImpl();
-        TransactionRepository transactionRepository = new TransactionRepositoryImpl();
-        AccountRepository accountRepository = new AccountRepositoryImpl();
+        Configuration config = new Configuration();
+        config.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
+        config.configure("hibernate.cfg.xml");
+
+        SessionFactory sessionFactory = config.buildSessionFactory();
+
+        UserRepository userRepository = new UserRepositoryImpl(sessionFactory);
+        FriendshipRepository friendshipRepository = new FriendshipRepositoryImpl(sessionFactory);
+        TransactionRepository transactionRepository = new TransactionRepositoryImpl(sessionFactory);
+        AccountRepository accountRepository = new AccountRepositoryImpl(sessionFactory);
 
         UserService userService = new UserServiceImpl(userRepository);
         FriendshipService friendshipService = new FriendshipServiceImpl(friendshipRepository);

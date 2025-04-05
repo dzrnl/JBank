@@ -6,6 +6,7 @@ import ru.dzrnl.bank.business.models.user.HairColor;
 import ru.dzrnl.bank.business.models.user.User;
 import ru.dzrnl.bank.business.repositories.UserRepository;
 
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -69,6 +70,6 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Set<User> getAllUsers() {
-        return userRepository.findAllUsers();
+        return new HashSet<>(userRepository.findAllUsers());
     }
 }

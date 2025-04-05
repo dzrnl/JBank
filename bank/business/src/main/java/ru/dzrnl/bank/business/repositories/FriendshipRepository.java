@@ -1,6 +1,6 @@
 package ru.dzrnl.bank.business.repositories;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Provides operations for managing user friendships in a repository.
@@ -38,7 +38,7 @@ public interface FriendshipRepository {
      * Retrieves all friend logins for a given user.
      *
      * @param login the login of the user whose friends are to be retrieved
-     * @return a {@code Set} of logins of the user's friends
+     * @return a {@code List} of logins of the user's friends
      */
-    Set<String> findFriendLogins(String login);
+    List<String> findFriendLogins(String login);
 }

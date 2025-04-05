@@ -1,26 +1,29 @@
 package ru.dzrnl.bank.data.repositories;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import ru.dzrnl.bank.business.models.account.Account;
 import ru.dzrnl.bank.business.repositories.AccountRepository;
+import ru.dzrnl.bank.data.entities.AccountEntity;
+import ru.dzrnl.bank.data.entities.UserEntity;
+import ru.dzrnl.bank.data.mappers.AccountMapper;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Implementation of the {@link AccountRepository} interface for managing accounts.
  * Uses an in-memory storage ({@code HashMap}) to store accounts.
  */
 public class AccountRepositoryImpl implements AccountRepository {
-    private final Map<Long, Account> accounts = new HashMap<>();
-    private long idCounter = 0;
+    private final SessionFactory sessionFactory;
 
     /**
      * Default constructor for AccountRepositoryImpl class.
      */
-    public AccountRepositoryImpl() {
+    public AccountRepositoryImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     /**
@@ -31,9 +34,40 @@ public class AccountRepositoryImpl implements AccountRepository {
      */
     @Override
     public Account createAccount(String ownerLogin) {
-        var account = new Account(nextId(), ownerLogin);
-        accounts.put(account.getId(), account);
-        return account;
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            UserEntity owner = getUserByLogin(session, ownerLogin);
+
+            AccountEntity account = AccountEntity.builder().owner(owner).build();
+
+            session.persist(account);
+            transaction.commit();
+
+            return AccountMapper.toDomain(account);
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
+    }
+
+    @Override
+    public void updateAccount(Account account) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+
+            UserEntity owner = getUserByLogin(session, account.getOwnerLogin());
+
+            AccountEntity accountEntity = AccountMapper.toEntity(account, owner);
+
+            session.merge(accountEntity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
     }
 
     /**
@@ -44,28 +78,33 @@ public class AccountRepositoryImpl implements AccountRepository {
      */
     @Override
     public Optional<Account> findAccountById(long accountId) {
-        return Optional.ofNullable(accounts.get(accountId));
+        try (Session session = sessionFactory.openSession()) {
+            AccountEntity account = session.get(AccountEntity.class, accountId);
+            if (account == null) return Optional.empty();
+            return Optional.of(AccountMapper.toDomain(account));
+        }
     }
 
     /**
      * Retrieves all accounts associated with a specific user.
      *
      * @param ownerLogin the login of the account's owner
-     * @return a {@code Set} of all accounts belonging to the user
+     * @return a {@code List} of all accounts belonging to the user
      */
     @Override
-    public Set<Account> findAllUserAccounts(String ownerLogin) {
-        return accounts.values().stream()
-                .filter(account -> account.getOwnerLogin().equals(ownerLogin))
-                .collect(Collectors.toSet());
+    public List<Account> findAllUserAccounts(String ownerLogin) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM AccountEntity WHERE owner.login = :ownerLogin", AccountEntity.class)
+                    .setParameter("ownerLogin", ownerLogin)
+                    .getResultList().stream().map(AccountMapper::toDomain).toList();
+        }
     }
 
-    /**
-     * Generates a new unique account ID.
-     *
-     * @return a unique account ID
-     */
-    private long nextId() {
-        return idCounter++;
+    private UserEntity getUserByLogin(Session session, String login) {
+        Query<UserEntity> query = session.createQuery(
+                "FROM UserEntity u WHERE u.login = :login", UserEntity.class
+        );
+        query.setParameter("login", login);
+        return query.uniqueResult();
     }
 }

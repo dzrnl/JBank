@@ -8,6 +8,7 @@ import ru.dzrnl.bank.business.models.account.TransactionType;
 import ru.dzrnl.bank.business.repositories.AccountRepository;
 import ru.dzrnl.bank.business.repositories.TransactionRepository;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -63,7 +64,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Set<Account> getAllUserAccounts(String userLogin) {
-        return accountRepository.findAllUserAccounts(userLogin);
+        return new HashSet<>(accountRepository.findAllUserAccounts(userLogin));
     }
 
     /**
@@ -85,7 +86,7 @@ public class AccountServiceImpl implements AccountService {
         );
 
         try {
-            transaction.execute(account);
+            executeTransaction(transaction, account);
         } catch (IllegalStateException e) {
             throw new IllegalStateException("Insufficient funds for account " + accountId);
         }
@@ -108,7 +109,7 @@ public class AccountServiceImpl implements AccountService {
                 TransactionType.DEPOSIT
         );
 
-        transaction.execute(account);
+        executeTransaction(transaction, account);
     }
 
     /**
@@ -132,7 +133,7 @@ public class AccountServiceImpl implements AccountService {
         );
 
         try {
-            fromTransaction.execute(fromAccount);
+            executeTransaction(fromTransaction, fromAccount);
         } catch (IllegalStateException e) {
             throw new IllegalStateException("Insufficient funds for account " + fromAccountId);
         }
@@ -145,7 +146,7 @@ public class AccountServiceImpl implements AccountService {
                 TransactionType.DEPOSIT
         );
 
-        toTransaction.execute(toAccount);
+        executeTransaction(toTransaction, toAccount);
     }
 
     /**
@@ -170,5 +171,16 @@ public class AccountServiceImpl implements AccountService {
         } else {
             return amount - amount * 10 / 100;
         }
+    }
+
+    /**
+     * Executes a transaction and updates the associated account.
+     *
+     * @param transaction the transaction to execute
+     * @param account the account that will be updated after the transaction is executed
+     */
+    private void executeTransaction(Transaction transaction, Account account) {
+        transaction.execute(account);
+        accountRepository.updateAccount(account);
     }
 }

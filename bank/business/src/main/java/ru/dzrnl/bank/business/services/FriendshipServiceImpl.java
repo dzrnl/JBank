@@ -3,6 +3,7 @@ package ru.dzrnl.bank.business.services;
 import ru.dzrnl.bank.business.contracts.FriendshipService;
 import ru.dzrnl.bank.business.repositories.FriendshipRepository;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -62,6 +63,6 @@ public class FriendshipServiceImpl implements FriendshipService {
      */
     @Override
     public Set<String> getFriendLogins(String userLogin) {
-        return friendshipRepository.findFriendLogins(userLogin);
+        return new HashSet<>(friendshipRepository.findFriendLogins(userLogin));
     }
 }

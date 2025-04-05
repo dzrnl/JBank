@@ -8,9 +8,7 @@ import ru.dzrnl.bank.business.models.user.User;
 import ru.dzrnl.bank.business.repositories.UserRepository;
 import ru.dzrnl.bank.business.services.UserServiceImpl;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -91,7 +89,7 @@ public class UserServiceTest {
 
     @Test
     public void shouldGetAllUsers() {
-        var userSet = Set.of(defaultUser, secondDefaultUser);
+        var users = List.of(defaultUser, secondDefaultUser);
 
         UserRepository mockRepo = mock(UserRepository.class);
 
@@ -99,9 +97,9 @@ public class UserServiceTest {
 
         assertTrue(userService.getAllUsers().isEmpty());
 
-        when(mockRepo.findAllUsers()).thenReturn(userSet);
+        when(mockRepo.findAllUsers()).thenReturn(users);
 
-        assertEquals(userService.getAllUsers(), userSet);
+        assertEquals(userService.getAllUsers(), new HashSet<>(users));
     }
 
     private static User getDefaultUser() {
