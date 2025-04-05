@@ -1,14 +1,13 @@
 package ru.dzrnl.bank.data.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 import ru.dzrnl.bank.business.models.user.Gender;
 import ru.dzrnl.bank.business.models.user.HairColor;
+
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -34,4 +33,15 @@ public class UserEntity {
     @Enumerated
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private HairColor hairColor;
+
+    @ManyToMany
+    @JoinTable(
+            name = "friendships",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "friend_id"})
+    )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<UserEntity> friends;
 }

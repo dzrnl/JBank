@@ -10,7 +10,6 @@
     <property name="connection.password">111</property>
 
     <mapping class="ru.dzrnl.bank.data.entities.UserEntity"/>
-    <mapping class="ru.dzrnl.bank.data.entities.FriendshipEntity"/>
     <mapping class="ru.dzrnl.bank.data.entities.TransactionEntity"/>
     <mapping class="ru.dzrnl.bank.data.entities.AccountEntity"/>
 

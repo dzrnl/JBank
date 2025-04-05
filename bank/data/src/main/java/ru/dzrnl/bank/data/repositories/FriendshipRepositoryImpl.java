@@ -5,7 +5,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import ru.dzrnl.bank.business.repositories.FriendshipRepository;
-import ru.dzrnl.bank.data.entities.FriendshipEntity;
 import ru.dzrnl.bank.data.entities.UserEntity;
 
 import java.util.List;
@@ -43,11 +42,12 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
             UserEntity user = getUserByLogin(session, userLogin);
             UserEntity friend = getUserByLogin(session, friendLogin);
 
-            FriendshipEntity friendship = new FriendshipEntity();
-            friendship.setUser(user);
-            friendship.setFriend(friend);
+            user.getFriends().add(friend);
+            friend.getFriends().add(user);
 
-            session.persist(friendship);
+            session.persist(user);
+            session.persist(friend);
+
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
@@ -73,18 +73,13 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
             UserEntity user = getUserByLogin(session, userLogin);
             UserEntity friend = getUserByLogin(session, friendLogin);
 
-            Query<FriendshipEntity> query = session.createQuery(
-                    "FROM FriendshipEntity WHERE (user = :user AND friend = :friend) OR (user = :friend AND friend = :user)",
-                    FriendshipEntity.class
-            );
-            query.setParameter("user", user);
-            query.setParameter("friend", friend);
-            FriendshipEntity friendship = query.uniqueResult();
+            user.getFriends().remove(friend);
+            friend.getFriends().remove(user);
 
-            if (friendship != null) {
-                session.remove(friendship);
-                transaction.commit();
-            }
+            session.persist(user);
+            session.persist(friend);
+
+            transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
             throw e;
@@ -104,16 +99,7 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
         try (Session session = sessionFactory.openSession()) {
             UserEntity user = getUserByLogin(session, userLogin);
             UserEntity friend = getUserByLogin(session, friendLogin);
-
-            Query<Long> query = session.createQuery(
-                    "SELECT COUNT(f) FROM FriendshipEntity f WHERE (f.user = :user AND f.friend = :friend) OR (f.user = :friend AND f.friend = :user)",
-                    Long.class
-            );
-            query.setParameter("user", user);
-            query.setParameter("friend", friend);
-            long count = query.uniqueResult();
-
-            return count > 0;
+            return user.getFriends().contains(friend);
         }
     }
 
@@ -129,14 +115,9 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
         try (Session session = sessionFactory.openSession()) {
             UserEntity user = getUserByLogin(session, login);
 
-            Query<String> query = session.createQuery(
-                    "SELECT CASE WHEN f.user = :user THEN f.friend.login ELSE f.user.login END " +
-                            "FROM FriendshipEntity f WHERE f.user = :user OR f.friend = :user",
-                    String.class
-            );
-            query.setParameter("user", user);
-
-            return query.list();
+            return user.getFriends().stream()
+                    .map(UserEntity::getLogin)
+                    .toList();
         }
     }
 
