@@ -39,7 +39,14 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User createUser(String login, String name, int age, Gender gender, HairColor hairColor) {
-        var user = new User(login, name, age, gender, hairColor);
+        var user = User.builder()
+                .login(login)
+                .name(name)
+                .age(age)
+                .gender(gender)
+                .hairColor(hairColor)
+                .build();
+
         try {
             userRepository.saveUser(user);
         } catch (IllegalArgumentException e) {

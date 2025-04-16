@@ -103,22 +103,22 @@ public class UserServiceTest {
     }
 
     private static User getDefaultUser() {
-        String userLogin = "ivanov";
-        String userName = "Ivan Ivanov";
-        int age = 30;
-        Gender gender = Gender.MALE;
-        HairColor hairColor = HairColor.BROWN;
-
-        return new User(userLogin, userName, age, gender, hairColor);
+        return User.builder()
+                .login("ivanov")
+                .name("Ivan Ivanov")
+                .age(30)
+                .gender(Gender.MALE)
+                .hairColor(HairColor.BROWN)
+                .build();
     }
 
     private static User getSecondDefaultUser() {
-        String userLogin = "petrov";
-        String userName = "Petar Petrov";
-        int age = 20;
-        Gender gender = Gender.MALE;
-        HairColor hairColor = HairColor.BLACK;
-
-        return new User(userLogin, userName, age, gender, hairColor);
+        return User.builder()
+                .login("petrov")
+                .name("Peter Petrov")
+                .age(20)
+                .gender(Gender.MALE)
+                .hairColor(HairColor.BLACK)
+                .build();
     }
 }

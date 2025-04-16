@@ -1,10 +1,12 @@
 package ru.dzrnl.bank.business.models.user;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Objects;
 
 @Data
+@Builder
 public class User {
 
     /**
