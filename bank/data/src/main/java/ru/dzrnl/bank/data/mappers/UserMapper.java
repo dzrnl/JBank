@@ -6,11 +6,11 @@ import ru.dzrnl.bank.data.entities.UserEntity;
 public class UserMapper {
     public static UserEntity toEntity(User user) {
         return UserEntity.builder()
-                .login(user.login())
-                .name(user.name())
-                .age(user.age())
-                .gender(user.gender())
-                .hairColor(user.hairColor())
+                .login(user.getLogin())
+                .name(user.getName())
+                .age(user.getAge())
+                .gender(user.getGender())
+                .hairColor(user.getHairColor())
                 .build();
     }
 

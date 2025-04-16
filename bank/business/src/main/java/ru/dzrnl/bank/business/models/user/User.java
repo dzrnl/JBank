@@ -1,17 +1,36 @@
 package ru.dzrnl.bank.business.models.user;
 
+import lombok.Data;
+
 import java.util.Objects;
 
-/**
- * Represents a user with basic personal information.
- *
- * @param login     unique login for the user
- * @param name      the name of the user
- * @param age       the age of the user
- * @param gender    the gender of the user
- * @param hairColor the hair color of the user
- */
-public record User(String login, String name, int age, Gender gender, HairColor hairColor) {
+@Data
+public class User {
+
+    /**
+     * Unique login for the user
+     */
+    private final String login;
+
+    /**
+     * The name of the user
+     */
+    private final String name;
+
+    /**
+     * The age of the user
+     */
+    private final int age;
+
+    /**
+     * The gender of the user
+     */
+    private final Gender gender;
+
+    /**
+     * The hair color of the user
+     */
+    private final HairColor hairColor;
 
     /**
      * Checks if two users are equal based on their login.
