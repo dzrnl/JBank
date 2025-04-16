@@ -15,10 +15,12 @@ public class UserMapper {
     }
 
     public static User toDomain(UserEntity user) {
-        return new User(user.getLogin(),
-                user.getName(),
-                user.getAge(),
-                user.getGender(),
-                user.getHairColor());
+        return User.builder()
+                .login(user.getLogin())
+                .name(user.getName())
+                .age(user.getAge())
+                .gender(user.getGender())
+                .hairColor(user.getHairColor())
+                .build();
     }
 }

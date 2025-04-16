@@ -5,6 +5,9 @@ import lombok.Data;
 
 import java.util.Objects;
 
+/**
+ * Represents a user with basic personal information.
+ */
 @Data
 @Builder
 public class User {
