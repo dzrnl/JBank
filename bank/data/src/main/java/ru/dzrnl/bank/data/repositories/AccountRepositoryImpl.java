@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 import ru.dzrnl.bank.business.models.account.Account;
 import ru.dzrnl.bank.business.repositories.AccountRepository;
 import ru.dzrnl.bank.data.entities.AccountEntity;
@@ -16,6 +17,7 @@ import java.util.*;
  * Implementation of the {@link AccountRepository} interface for managing accounts.
  * Uses an in-memory storage ({@code HashMap}) to store accounts.
  */
+@Repository
 public class AccountRepositoryImpl implements AccountRepository {
     private final SessionFactory sessionFactory;
 

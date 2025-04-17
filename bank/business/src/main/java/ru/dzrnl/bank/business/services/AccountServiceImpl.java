@@ -1,5 +1,6 @@
 package ru.dzrnl.bank.business.services;
 
+import org.springframework.stereotype.Service;
 import ru.dzrnl.bank.business.contracts.AccountService;
 import ru.dzrnl.bank.business.contracts.FriendshipService;
 import ru.dzrnl.bank.business.models.account.Account;
@@ -14,6 +15,7 @@ import java.util.Set;
 /**
  * Implementation of {@link AccountService} for managing accounts.
  */
+@Service
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;

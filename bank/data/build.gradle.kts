@@ -21,6 +21,8 @@ dependencies {
 
     runtimeOnly("org.postgresql:postgresql:42.7.5")
 
+    implementation("org.springframework:spring-context:6.1.14")
+
     testCompileOnly("org.projectlombok:lombok:1.18.38")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
 

@@ -1,5 +1,6 @@
 package ru.dzrnl.bank.business.services;
 
+import org.springframework.stereotype.Service;
 import ru.dzrnl.bank.business.contracts.FriendshipService;
 import ru.dzrnl.bank.business.repositories.FriendshipRepository;
 
@@ -9,6 +10,7 @@ import java.util.Set;
 /**
  * Implementation of {@link FriendshipService} for managing user friendships.
  */
+@Service
 public class FriendshipServiceImpl implements FriendshipService {
     private final FriendshipRepository friendshipRepository;
 

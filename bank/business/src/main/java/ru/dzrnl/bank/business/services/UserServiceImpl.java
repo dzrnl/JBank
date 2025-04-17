@@ -1,5 +1,6 @@
 package ru.dzrnl.bank.business.services;
 
+import org.springframework.stereotype.Service;
 import ru.dzrnl.bank.business.contracts.UserService;
 import ru.dzrnl.bank.business.models.user.Gender;
 import ru.dzrnl.bank.business.models.user.HairColor;
@@ -13,6 +14,7 @@ import java.util.Set;
 /**
  * Implementation of {@link UserService} for managing users.
  */
+@Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 

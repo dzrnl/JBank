@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 import ru.dzrnl.bank.business.repositories.FriendshipRepository;
 import ru.dzrnl.bank.data.entities.UserEntity;
 
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * Implementation of {@link FriendshipRepository} for PostgreSQL using Hibernate.
  */
+@Repository
 public class FriendshipRepositoryImpl implements FriendshipRepository {
     private final SessionFactory sessionFactory;
 

@@ -2,6 +2,7 @@ package ru.dzrnl.bank.data.repositories;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
 import ru.dzrnl.bank.business.models.account.Transaction;
 import ru.dzrnl.bank.business.models.account.TransactionType;
 import ru.dzrnl.bank.business.repositories.TransactionRepository;
@@ -16,6 +17,7 @@ import java.util.Optional;
  * Implementation of {@link TransactionRepository} for managing transactions.
  * Uses an in-memory storage ({@code HashMap}) to store transactions.
  */
+@Repository
 public class TransactionRepositoryImpl implements TransactionRepository {
     private final SessionFactory sessionFactory;
 

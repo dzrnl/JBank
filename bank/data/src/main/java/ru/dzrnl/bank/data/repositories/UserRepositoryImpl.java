@@ -4,6 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 import ru.dzrnl.bank.business.models.user.User;
 import ru.dzrnl.bank.business.repositories.UserRepository;
 import ru.dzrnl.bank.data.entities.UserEntity;
@@ -14,6 +15,7 @@ import java.util.*;
 /**
  * Implementation of {@link UserRepository} for PostgreSQL using Hibernate.
  */
+@Repository
 public class UserRepositoryImpl implements UserRepository {
     private final SessionFactory sessionFactory;
 

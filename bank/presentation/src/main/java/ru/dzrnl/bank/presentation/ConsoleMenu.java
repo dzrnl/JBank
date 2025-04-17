@@ -1,5 +1,6 @@
 package ru.dzrnl.bank.presentation;
 
+import org.springframework.stereotype.Component;
 import ru.dzrnl.bank.business.contracts.AccountService;
 import ru.dzrnl.bank.business.contracts.FriendshipService;
 import ru.dzrnl.bank.business.contracts.UserService;
@@ -15,6 +16,7 @@ import java.util.Set;
 /**
  * Console-based menu for interacting with the banking system.
  */
+@Component
 public class ConsoleMenu {
     private final Scanner scanner;
     private final UserService userService;
