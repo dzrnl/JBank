@@ -10,6 +10,7 @@ import ru.dzrnl.bank.business.repositories.AccountRepository;
 import ru.dzrnl.bank.business.repositories.TransactionRepository;
 import ru.dzrnl.bank.business.services.AccountServiceImpl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -24,30 +25,32 @@ public class AccountServiceTest {
 
     @Test
     public void shouldCreateAccount() {
-        int accountId = 0;
+        Account accountToSave = new Account(defaultUserLogin);
+        Account savedAccount = createAccount(1L, defaultUserLogin);
 
         AccountRepository mockAccountRepo = mock(AccountRepository.class);
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.createAccount(defaultUserLogin)).thenReturn(new Account(accountId, defaultUserLogin));
+        when(mockAccountRepo.saveAccount(accountToSave)).thenReturn(savedAccount);
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
 
         assertEquals(accountService.createAccount(defaultUserLogin).getOwnerLogin(), defaultUserLogin);
 
-        verify(mockAccountRepo, times(1)).createAccount(defaultUserLogin);
+        verify(mockAccountRepo, times(1)).saveAccount(accountToSave);
     }
 
     @Test
     public void shouldGetAccount() {
-        int accountId = 0;
+        long accountId = 1;
+        Account savedAccount = createAccount(accountId, defaultUserLogin);
 
         AccountRepository mockAccountRepo = mock(AccountRepository.class);
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.findAccountById(accountId)).thenReturn(Optional.of(new Account(accountId, defaultUserLogin)));
+        when(mockAccountRepo.findAccountById(accountId)).thenReturn(Optional.of(savedAccount));
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
 
@@ -58,7 +61,7 @@ public class AccountServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenNoAccount() {
-        int accountId = 0;
+        long accountId = 1;
 
         AccountRepository mockAccountRepo = mock(AccountRepository.class);
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
@@ -77,7 +80,7 @@ public class AccountServiceTest {
 
     @Test
     public void shouldGetAllUserAccounts() {
-        var userAccounts = List.of(new Account(1, defaultUserLogin), new Account(2, defaultUserLogin));
+        var userAccounts = List.of(createAccount(1, defaultUserLogin), createAccount(2, defaultUserLogin));
 
         AccountRepository mockAccountRepo = mock(AccountRepository.class);
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
@@ -94,7 +97,7 @@ public class AccountServiceTest {
 
     @Test
     public void shouldDepositMoney() {
-        var account = new Account(0, defaultUserLogin);
+        var account = createAccount(0, defaultUserLogin);
         long amount = 1000;
 
         AccountRepository mockAccountRepo = mock(AccountRepository.class);
@@ -253,8 +256,12 @@ public class AccountServiceTest {
         assertEquals(secondBalance + expectedTransferAmount, secondAccount.getBalance());
     }
 
+    private static Account createAccount(long accountId, String userLogin) {
+        return new Account(accountId, 0, userLogin, new ArrayList<>());
+    }
+
     private static Account createAccountWithBalance(long accountId, String userLogin, long balance) {
-        var account = new Account(accountId, userLogin);
+        var account = createAccount(accountId, userLogin);
 
         AccountRepository mockAccountRepo = mock(AccountRepository.class);
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);

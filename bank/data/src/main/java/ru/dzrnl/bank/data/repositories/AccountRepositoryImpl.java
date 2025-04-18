@@ -28,26 +28,20 @@ public class AccountRepositoryImpl implements AccountRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    /**
-     * Creates a new account for a user.
-     *
-     * @param ownerLogin the login of the account's owner
-     * @return the created Account
-     */
     @Override
-    public Account createAccount(String ownerLogin) {
+    public Account saveAccount(Account account) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
 
-            UserEntity owner = getUserByLogin(session, ownerLogin);
+            UserEntity owner = getUserByLogin(session, account.getOwnerLogin());
 
-            AccountEntity account = AccountEntity.builder().owner(owner).build();
+            AccountEntity entity = AccountMapper.toEntity(account, owner);
 
-            session.persist(account);
+            session.persist(entity);
             transaction.commit();
 
-            return AccountMapper.toDomain(account);
+            return AccountMapper.toDomain(entity);
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
             throw e;

@@ -42,7 +42,9 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Account createAccount(String userLogin) {
-        return accountRepository.createAccount(userLogin);
+        var account = new Account(userLogin);
+
+        return accountRepository.saveAccount(account);
     }
 
     /**
@@ -179,7 +181,7 @@ public class AccountServiceImpl implements AccountService {
      * Executes a transaction and updates the associated account.
      *
      * @param transaction the transaction to execute
-     * @param account the account that will be updated after the transaction is executed
+     * @param account     the account that will be updated after the transaction is executed
      */
     private void executeTransaction(Transaction transaction, Account account) {
         transaction.execute(account);

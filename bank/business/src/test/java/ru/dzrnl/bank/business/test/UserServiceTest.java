@@ -14,8 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class UserServiceTest {
-    private final User defaultUser = getDefaultUser();
-    private final User secondDefaultUser = getSecondDefaultUser();
+    private final User defaultUser = getDefaultUser(false);
+    private final User defaultSavedUser = getDefaultUser(true);
+    private final User secondDefaultUser = getSecondDefaultUser(false);
+    private final User secondDefaultSavedUser = getSecondDefaultUser(true);
 
     @Test
     public void shouldCreateUser() {
@@ -26,7 +28,7 @@ public class UserServiceTest {
         HairColor hairColor = defaultUser.getHairColor();
 
         UserRepository mockRepo = mock(UserRepository.class);
-        doNothing().when(mockRepo).saveUser(argThat(user -> user.getLogin().equals(userLogin)));
+        when(mockRepo.saveUser(argThat(user -> user.getLogin().equals(userLogin)))).thenReturn(defaultSavedUser);
 
         UserService userService = new UserServiceImpl(mockRepo);
 
@@ -102,23 +104,33 @@ public class UserServiceTest {
         assertEquals(userService.getAllUsers(), new HashSet<>(users));
     }
 
-    private static User getDefaultUser() {
-        return User.builder()
+    private static User getDefaultUser(boolean saved) {
+        User.UserBuilder builder = User.builder()
                 .login("ivanov")
                 .name("Ivan Ivanov")
                 .age(30)
                 .gender(Gender.MALE)
-                .hairColor(HairColor.BROWN)
-                .build();
+                .hairColor(HairColor.BROWN);
+
+        if (saved) {
+            builder.id(1L);
+        }
+
+        return builder.build();
     }
 
-    private static User getSecondDefaultUser() {
-        return User.builder()
+    private static User getSecondDefaultUser(boolean saved) {
+        User.UserBuilder builder = User.builder()
                 .login("petrov")
                 .name("Peter Petrov")
                 .age(20)
                 .gender(Gender.MALE)
-                .hairColor(HairColor.BLACK)
-                .build();
+                .hairColor(HairColor.BLACK);
+
+        if (saved) {
+            builder.id(2L);
+        }
+
+        return builder.build();
     }
 }

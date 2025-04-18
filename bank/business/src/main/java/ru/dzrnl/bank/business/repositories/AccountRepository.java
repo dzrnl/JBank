@@ -10,13 +10,7 @@ import java.util.Optional;
  */
 public interface AccountRepository {
 
-    /**
-     * Creates a new account for a user.
-     *
-     * @param ownerLogin the login of the account's owner
-     * @return the created account
-     */
-    Account createAccount(String ownerLogin);
+    Account saveAccount(Account account);
 
     /**
      * Updates the details of an existing account.
