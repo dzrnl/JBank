@@ -1,57 +1,46 @@
 package ru.dzrnl.bank.data.repositories;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import ru.dzrnl.bank.business.models.user.User;
 import ru.dzrnl.bank.business.repositories.UserRepository;
 import ru.dzrnl.bank.data.entities.UserEntity;
 import ru.dzrnl.bank.data.mappers.UserMapper;
+import ru.dzrnl.bank.data.repositories.jpa.UserJpaRepository;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
-    private final SessionFactory sessionFactory;
 
-    public UserRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    private final UserJpaRepository jpaUserRepository;
+
+    public UserRepositoryImpl(UserJpaRepository jpaUserRepository) {
+        this.jpaUserRepository = jpaUserRepository;
     }
 
     @Override
     public User save(User user) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            UserEntity entity = UserMapper.toEntity(user);
-            session.persist(entity);
-            transaction.commit();
-            return UserMapper.toDomain(entity);
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw e;
-        }
+        UserEntity entity = UserMapper.toEntity(user);
+        UserEntity saved = jpaUserRepository.save(entity);
+        return UserMapper.toDomain(saved);
+    }
+
+    @Override
+    public Optional<User> findById(long usedId) {
+        return jpaUserRepository.findById(usedId).map(UserMapper::toDomain);
     }
 
     @Override
     public Optional<User> findByLogin(String login) {
-        try (Session session = sessionFactory.openSession()) {
-            Query<UserEntity> query = session.createQuery(
-                    "FROM UserEntity WHERE login = :login", UserEntity.class);
-            query.setParameter("login", login);
-
-            return query.getResultList().stream().findFirst().map(UserMapper::toDomain);
-        }
+        return jpaUserRepository.findByLogin(login).map(UserMapper::toDomain);
     }
 
     @Override
     public List<User> findAll() {
-        try (Session session = sessionFactory.openSession()) {
-            Query<UserEntity> query = session.createQuery("FROM UserEntity", UserEntity.class);
-
-            return query.getResultList().stream().map(UserMapper::toDomain).toList();
-        }
+        return jpaUserRepository.findAll()
+                .stream()
+                .map(UserMapper::toDomain)
+                .toList();
     }
 }

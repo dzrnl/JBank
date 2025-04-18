@@ -1,6 +1,5 @@
 package ru.dzrnl.bank.presentation;
 
-import org.springframework.stereotype.Component;
 import ru.dzrnl.bank.business.contracts.AccountService;
 import ru.dzrnl.bank.business.contracts.FriendshipService;
 import ru.dzrnl.bank.business.contracts.UserService;
@@ -13,23 +12,12 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
 
-/**
- * Console-based menu for interacting with the banking system.
- */
-@Component
 public class ConsoleMenu {
     private final Scanner scanner;
     private final UserService userService;
     private final FriendshipService friendshipService;
     private final AccountService accountService;
 
-    /**
-     * Constructs a ConsoleMenu with the required services.
-     *
-     * @param userService        Service for user operations.
-     * @param friendshipService  Service for friendship management.
-     * @param accountService     Service for account management.
-     */
     public ConsoleMenu(UserService userService, FriendshipService friendshipService, AccountService accountService) {
         this.scanner = new Scanner(System.in);
 

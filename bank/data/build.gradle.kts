@@ -1,4 +1,6 @@
 plugins {
+    id("org.springframework.boot") version "3.2.5"
+    id("io.spring.dependency-management") version "1.1.4"
     id("java")
 }
 
@@ -22,6 +24,8 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql:42.7.5")
 
     implementation("org.springframework:spring-context:6.1.14")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     testCompileOnly("org.projectlombok:lombok:1.18.38")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.38")
