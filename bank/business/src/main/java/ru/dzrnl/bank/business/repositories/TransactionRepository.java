@@ -12,4 +12,6 @@ public interface TransactionRepository {
     Optional<Transaction> findById(long transactionId);
 
     List<Transaction> findAllByAccountId(long accountId);
+
+    List<Transaction> findAll();
 }

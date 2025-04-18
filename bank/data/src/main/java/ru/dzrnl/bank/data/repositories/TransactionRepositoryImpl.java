@@ -51,4 +51,11 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 .map(TransactionMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public List<Transaction> findAll() {
+        return transactionJpaRepository.findAll().stream()
+                .map(TransactionMapper::toDomain)
+                .toList();
+    }
 }

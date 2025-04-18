@@ -164,6 +164,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     /**
+     * Retrieves all transactions.
+     *
+     * @return a {@code Set} of all transactions
+     */
+    @Override
+    public Set<Transaction> getAllTransactions() {
+        return new HashSet<>(transactionRepository.findAll());
+    }
+
+    /**
      * Calculates the transfer amount with the appropriate fee based on user relationships.
      * - No fee for transfers between the same user's accounts.
      * - Friends pay a 3% fee.

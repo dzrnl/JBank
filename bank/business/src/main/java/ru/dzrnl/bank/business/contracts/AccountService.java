@@ -1,6 +1,7 @@
 package ru.dzrnl.bank.business.contracts;
 
 import ru.dzrnl.bank.business.models.account.Account;
+import ru.dzrnl.bank.business.models.account.Transaction;
 
 import java.util.Set;
 
@@ -70,4 +71,11 @@ public interface AccountService {
      * @throws IllegalStateException    if a withdrawal is attempted with insufficient funds
      */
     void transferMoney(long fromAccountId, long toAccountId, long amount);
+
+    /**
+     * Retrieves all transactions.
+     *
+     * @return a {@code Set} of all transactions
+     */
+    Set<Transaction> getAllTransactions();
 }
