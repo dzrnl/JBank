@@ -10,13 +10,7 @@ import java.util.Optional;
  */
 public interface UserRepository {
 
-    /**
-     * Saves a user to the repository.
-     *
-     * @param user the user to save
-     * @throws IllegalArgumentException if a user with the same login already exists
-     */
-    void saveUser(User user);
+    User saveUser(User user);
 
     /**
      * Finds a user by their login.

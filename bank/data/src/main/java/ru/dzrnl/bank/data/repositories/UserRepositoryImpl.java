@@ -28,20 +28,15 @@ public class UserRepositoryImpl implements UserRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    /**
-     * Saves a user in the database.
-     *
-     * @param user the user to save
-     * @throws RuntimeException if an error occurs during the transaction
-     */
     @Override
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             UserEntity entity = UserMapper.toEntity(user);
             session.persist(entity);
             transaction.commit();
+            return UserMapper.toDomain(entity);
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
             throw e;

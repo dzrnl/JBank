@@ -50,13 +50,12 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         try {
-            userRepository.saveUser(user);
+            return userRepository.saveUser(user);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("User with login '" + login + "' already exists", e);
         } catch (RuntimeException e) {
             throw new RuntimeException("Error occurred while saving user", e);
         }
-        return user;
     }
 
     /**

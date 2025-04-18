@@ -13,6 +13,11 @@ import java.util.Objects;
 public class User {
 
     /**
+     * User id
+     */
+    private final Long id;
+
+    /**
      * Unique login for the user
      */
     private final String login;
