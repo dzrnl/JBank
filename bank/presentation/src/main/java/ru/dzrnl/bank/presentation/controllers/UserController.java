@@ -1,5 +1,8 @@
 package ru.dzrnl.bank.presentation.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.dzrnl.bank.business.contracts.FriendshipService;
@@ -23,6 +26,11 @@ public class UserController {
         this.friendshipService = friendshipService;
     }
 
+    @Operation(summary = "Get user by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User successfully retrieved"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable long userId) {
         try {
@@ -33,6 +41,10 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Get a user's friends by user ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of friends retrieved successfully")
+    })
     @GetMapping("/{userId}/friends")
     public List<UserDto> getUserFriends(@PathVariable long userId) {
         return friendshipService.getFriends(userId).stream()
@@ -40,6 +52,11 @@ public class UserController {
                 .toList();
     }
 
+    @Operation(summary = "Get all users with optional filtering by gender and hair color")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of users retrieved successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid gender or hair color filter value")
+    })
     @GetMapping
     public List<UserDto> getAllUsers(@RequestParam(required = false) String gender,
                                      @RequestParam(required = false) String hairColor) {
