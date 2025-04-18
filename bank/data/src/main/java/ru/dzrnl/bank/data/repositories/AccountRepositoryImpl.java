@@ -13,23 +13,16 @@ import ru.dzrnl.bank.data.mappers.AccountMapper;
 
 import java.util.*;
 
-/**
- * Implementation of the {@link AccountRepository} interface for managing accounts.
- * Uses an in-memory storage ({@code HashMap}) to store accounts.
- */
 @Repository
 public class AccountRepositoryImpl implements AccountRepository {
     private final SessionFactory sessionFactory;
 
-    /**
-     * Default constructor for AccountRepositoryImpl class.
-     */
     public AccountRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public Account saveAccount(Account account) {
+    public Account save(Account account) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -49,31 +42,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void updateAccount(Account account) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-
-            UserEntity owner = getUserByLogin(session, account.getOwnerLogin());
-
-            AccountEntity accountEntity = AccountMapper.toEntity(account, owner);
-
-            session.merge(accountEntity);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw e;
-        }
-    }
-
-    /**
-     * Retrieves an account by its unique ID.
-     *
-     * @param accountId the ID of the account to retrieve
-     * @return an {@code Optional} containing the account if found, otherwise an empty {@code Optional}
-     */
-    @Override
-    public Optional<Account> findAccountById(long accountId) {
+    public Optional<Account> findById(long accountId) {
         try (Session session = sessionFactory.openSession()) {
             AccountEntity account = session.get(AccountEntity.class, accountId);
             if (account == null) return Optional.empty();
@@ -81,14 +50,8 @@ public class AccountRepositoryImpl implements AccountRepository {
         }
     }
 
-    /**
-     * Retrieves all accounts associated with a specific user.
-     *
-     * @param ownerLogin the login of the account's owner
-     * @return a {@code List} of all accounts belonging to the user
-     */
     @Override
-    public List<Account> findAllUserAccounts(String ownerLogin) {
+    public List<Account> findAllByOwnerLogin(String ownerLogin) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM AccountEntity WHERE owner.login = :ownerLogin", AccountEntity.class)
                     .setParameter("ownerLogin", ownerLogin)

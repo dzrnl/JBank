@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
     public Account createAccount(String userLogin) {
         var account = new Account(userLogin);
 
-        return accountRepository.saveAccount(account);
+        return accountRepository.save(account);
     }
 
     /**
@@ -56,7 +56,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Account getAccount(long accountId) {
-        return accountRepository.findAccountById(accountId)
+        return accountRepository.findById(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("Account with id '" + accountId + "' not found"));
     }
 
@@ -68,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Set<Account> getAllUserAccounts(String userLogin) {
-        return new HashSet<>(accountRepository.findAllUserAccounts(userLogin));
+        return new HashSet<>(accountRepository.findAllByOwnerLogin(userLogin));
     }
 
     /**
@@ -83,7 +83,7 @@ public class AccountServiceImpl implements AccountService {
     public void withdrawMoney(long accountId, long amount) {
         Account account = getAccount(accountId);
 
-        Transaction transaction = transactionRepository.createTransaction(
+        Transaction transaction = transactionRepository.save(
                 accountId,
                 amount,
                 TransactionType.WITHDRAW
@@ -107,7 +107,7 @@ public class AccountServiceImpl implements AccountService {
     public void depositMoney(long accountId, long amount) {
         Account account = getAccount(accountId);
 
-        Transaction transaction = transactionRepository.createTransaction(
+        Transaction transaction = transactionRepository.save(
                 accountId,
                 amount,
                 TransactionType.DEPOSIT
@@ -130,7 +130,7 @@ public class AccountServiceImpl implements AccountService {
         var fromAccount = getAccount(fromAccountId);
         var toAccount = getAccount(toAccountId);
 
-        Transaction fromTransaction = transactionRepository.createTransaction(
+        Transaction fromTransaction = transactionRepository.save(
                 fromAccountId,
                 amount,
                 TransactionType.WITHDRAW
@@ -144,7 +144,7 @@ public class AccountServiceImpl implements AccountService {
 
         amount = calculateTransferAmountWithFee(fromAccount, toAccount, amount);
 
-        Transaction toTransaction = transactionRepository.createTransaction(
+        Transaction toTransaction = transactionRepository.save(
                 toAccountId,
                 amount,
                 TransactionType.DEPOSIT
@@ -185,6 +185,6 @@ public class AccountServiceImpl implements AccountService {
      */
     private void executeTransaction(Transaction transaction, Account account) {
         transaction.execute(account);
-        accountRepository.updateAccount(account);
+        accountRepository.save(account);
     }
 }

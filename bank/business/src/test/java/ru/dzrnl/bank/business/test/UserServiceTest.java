@@ -28,13 +28,13 @@ public class UserServiceTest {
         HairColor hairColor = defaultUser.getHairColor();
 
         UserRepository mockRepo = mock(UserRepository.class);
-        when(mockRepo.saveUser(argThat(user -> user.getLogin().equals(userLogin)))).thenReturn(defaultSavedUser);
+        when(mockRepo.save(argThat(user -> user.getLogin().equals(userLogin)))).thenReturn(defaultSavedUser);
 
         UserService userService = new UserServiceImpl(mockRepo);
 
         userService.createUser(userLogin, userName, age, gender, hairColor);
 
-        verify(mockRepo, times(1)).saveUser(argThat(user -> user.getLogin().equals(userLogin)
+        verify(mockRepo, times(1)).save(argThat(user -> user.getLogin().equals(userLogin)
                 && user.getName().equals(userName)
                 && user.getAge() == age
                 && user.getGender() == gender
@@ -51,7 +51,7 @@ public class UserServiceTest {
 
         UserRepository mockRepo = mock(UserRepository.class);
         doThrow(new IllegalArgumentException())
-                .when(mockRepo).saveUser(argThat(user -> user.getLogin().equals(userLogin)));
+                .when(mockRepo).save(argThat(user -> user.getLogin().equals(userLogin)));
 
         UserService userService = new UserServiceImpl(mockRepo);
 
@@ -64,7 +64,7 @@ public class UserServiceTest {
         String userLogin = defaultUser.getLogin();
 
         UserRepository mockRepo = mock(UserRepository.class);
-        when(mockRepo.findUserByLogin(userLogin)).thenReturn(Optional.of(defaultUser));
+        when(mockRepo.findByLogin(userLogin)).thenReturn(Optional.of(defaultUser));
 
         UserService userService = new UserServiceImpl(mockRepo);
 
@@ -79,7 +79,7 @@ public class UserServiceTest {
         String userLogin = defaultUser.getLogin();
 
         UserRepository mockRepo = mock(UserRepository.class);
-        when(mockRepo.findUserByLogin(userLogin)).thenReturn(Optional.empty());
+        when(mockRepo.findByLogin(userLogin)).thenReturn(Optional.empty());
 
         UserService userService = new UserServiceImpl(mockRepo);
 
@@ -99,7 +99,7 @@ public class UserServiceTest {
 
         assertTrue(userService.getAllUsers().isEmpty());
 
-        when(mockRepo.findAllUsers()).thenReturn(users);
+        when(mockRepo.findAll()).thenReturn(users);
 
         assertEquals(userService.getAllUsers(), new HashSet<>(users));
     }

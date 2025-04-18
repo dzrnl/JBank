@@ -60,7 +60,7 @@ public class FriendshipServiceTest {
         var friendLogins = List.of(secondDefaultUserLogin, thirdDefaultUserLogin);
 
         FriendshipRepository mockRepo = mock(FriendshipRepository.class);
-        when(mockRepo.findFriendLogins(defaultUserLogin)).thenReturn(friendLogins);
+        when(mockRepo.findAllFriendsOf(defaultUserLogin)).thenReturn(friendLogins);
 
         FriendshipService friendshipService = new FriendshipServiceImpl(mockRepo);
 

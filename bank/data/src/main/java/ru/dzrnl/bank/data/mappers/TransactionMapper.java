@@ -7,7 +7,7 @@ import ru.dzrnl.bank.data.entities.TransactionEntity;
 public class TransactionMapper {
     public static TransactionEntity toEntity(Transaction transaction, AccountEntity account) {
         return TransactionEntity.builder()
-                .id((int) transaction.id())
+                .id(transaction.id())
                 .account(account)
                 .amount(transaction.amount())
                 .type(transaction.type())

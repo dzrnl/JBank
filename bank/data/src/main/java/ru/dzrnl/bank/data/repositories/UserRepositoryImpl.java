@@ -12,24 +12,16 @@ import ru.dzrnl.bank.data.mappers.UserMapper;
 
 import java.util.*;
 
-/**
- * Implementation of {@link UserRepository} for PostgreSQL using Hibernate.
- */
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     private final SessionFactory sessionFactory;
 
-    /**
-     * Constructs a UserRepositoryImpl.
-     *
-     * @param sessionFactory Hibernate session factory
-     */
     public UserRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public User saveUser(User user) {
+    public User save(User user) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -43,15 +35,8 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    /**
-     * Finds a user by their login in the database.
-     *
-     * @param login the login of the user to find
-     * @return an {@code Optional} containing the user if found, otherwise an empty {@code Optional}
-     * @throws RuntimeException if a database access error occurs
-     */
     @Override
-    public Optional<User> findUserByLogin(String login) {
+    public Optional<User> findByLogin(String login) {
         try (Session session = sessionFactory.openSession()) {
             Query<UserEntity> query = session.createQuery(
                     "FROM UserEntity WHERE login = :login", UserEntity.class);
@@ -61,14 +46,8 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    /**
-     * Retrieves all users from the database.
-     *
-     * @return a {@code List} of all users
-     * @throws RuntimeException if a database access error occurs
-     */
     @Override
-    public List<User> findAllUsers() {
+    public List<User> findAll() {
         try (Session session = sessionFactory.openSession()) {
             Query<UserEntity> query = session.createQuery("FROM UserEntity", UserEntity.class);
 

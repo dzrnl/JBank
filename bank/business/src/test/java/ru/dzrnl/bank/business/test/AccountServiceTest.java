@@ -32,13 +32,13 @@ public class AccountServiceTest {
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.saveAccount(accountToSave)).thenReturn(savedAccount);
+        when(mockAccountRepo.save(accountToSave)).thenReturn(savedAccount);
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
 
         assertEquals(accountService.createAccount(defaultUserLogin).getOwnerLogin(), defaultUserLogin);
 
-        verify(mockAccountRepo, times(1)).saveAccount(accountToSave);
+        verify(mockAccountRepo, times(1)).save(accountToSave);
     }
 
     @Test
@@ -50,13 +50,13 @@ public class AccountServiceTest {
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.findAccountById(accountId)).thenReturn(Optional.of(savedAccount));
+        when(mockAccountRepo.findById(accountId)).thenReturn(Optional.of(savedAccount));
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
 
         assertEquals(accountService.getAccount(accountId).getOwnerLogin(), defaultUserLogin);
 
-        verify(mockAccountRepo, times(1)).findAccountById(accountId);
+        verify(mockAccountRepo, times(1)).findById(accountId);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class AccountServiceTest {
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.findAccountById(accountId)).thenReturn(Optional.empty());
+        when(mockAccountRepo.findById(accountId)).thenReturn(Optional.empty());
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -75,7 +75,7 @@ public class AccountServiceTest {
 
         assertEquals("Account with id '" + accountId + "' not found", exception.getMessage());
 
-        verify(mockAccountRepo, times(1)).findAccountById(accountId);
+        verify(mockAccountRepo, times(1)).findById(accountId);
     }
 
     @Test
@@ -86,13 +86,13 @@ public class AccountServiceTest {
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.findAllUserAccounts(defaultUserLogin)).thenReturn(userAccounts);
+        when(mockAccountRepo.findAllByOwnerLogin(defaultUserLogin)).thenReturn(userAccounts);
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
 
         assertEquals(accountService.getAllUserAccounts(defaultUserLogin), new HashSet<>(userAccounts));
 
-        verify(mockAccountRepo, times(1)).findAllUserAccounts(defaultUserLogin);
+        verify(mockAccountRepo, times(1)).findAllByOwnerLogin(defaultUserLogin);
     }
 
     @Test
@@ -104,9 +104,9 @@ public class AccountServiceTest {
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.findAccountById(account.getId())).thenReturn(Optional.of(account));
+        when(mockAccountRepo.findById(account.getId())).thenReturn(Optional.of(account));
 
-        when(mockTransactionRepo.createTransaction(eq(account.getId()), eq(amount), eq(TransactionType.DEPOSIT)))
+        when(mockTransactionRepo.save(eq(account.getId()), eq(amount), eq(TransactionType.DEPOSIT)))
                 .thenReturn(new Transaction(0, account.getId(), amount, TransactionType.DEPOSIT));
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
@@ -126,9 +126,9 @@ public class AccountServiceTest {
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.findAccountById(account.getId())).thenReturn(Optional.of(account));
+        when(mockAccountRepo.findById(account.getId())).thenReturn(Optional.of(account));
 
-        when(mockTransactionRepo.createTransaction(eq(account.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
+        when(mockTransactionRepo.save(eq(account.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
                 .thenReturn(new Transaction(0, account.getId(), amount, TransactionType.WITHDRAW));
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
@@ -148,9 +148,9 @@ public class AccountServiceTest {
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.findAccountById(account.getId())).thenReturn(Optional.of(account));
+        when(mockAccountRepo.findById(account.getId())).thenReturn(Optional.of(account));
 
-        when(mockTransactionRepo.createTransaction(eq(account.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
+        when(mockTransactionRepo.save(eq(account.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
                 .thenReturn(new Transaction(0, account.getId(), amount, TransactionType.WITHDRAW));
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
@@ -175,13 +175,13 @@ public class AccountServiceTest {
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.findAccountById(firstAccount.getId())).thenReturn(Optional.of(firstAccount));
-        when(mockAccountRepo.findAccountById(secondAccount.getId())).thenReturn(Optional.of(secondAccount));
+        when(mockAccountRepo.findById(firstAccount.getId())).thenReturn(Optional.of(firstAccount));
+        when(mockAccountRepo.findById(secondAccount.getId())).thenReturn(Optional.of(secondAccount));
 
-        when(mockTransactionRepo.createTransaction(eq(firstAccount.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
+        when(mockTransactionRepo.save(eq(firstAccount.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
                 .thenReturn(new Transaction(0, firstAccount.getId(), amount, TransactionType.WITHDRAW));
 
-        when(mockTransactionRepo.createTransaction(eq(secondAccount.getId()), eq(amount), eq(TransactionType.DEPOSIT)))
+        when(mockTransactionRepo.save(eq(secondAccount.getId()), eq(amount), eq(TransactionType.DEPOSIT)))
                 .thenReturn(new Transaction(1, secondAccount.getId(), amount, TransactionType.DEPOSIT));
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
@@ -205,15 +205,15 @@ public class AccountServiceTest {
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.findAccountById(firstAccount.getId())).thenReturn(Optional.of(firstAccount));
-        when(mockAccountRepo.findAccountById(secondAccount.getId())).thenReturn(Optional.of(secondAccount));
+        when(mockAccountRepo.findById(firstAccount.getId())).thenReturn(Optional.of(firstAccount));
+        when(mockAccountRepo.findById(secondAccount.getId())).thenReturn(Optional.of(secondAccount));
 
         when(mockFriendshipService.areFriends(defaultUserLogin, secondDefaultUserLogin)).thenReturn(true);
 
-        when(mockTransactionRepo.createTransaction(eq(firstAccount.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
+        when(mockTransactionRepo.save(eq(firstAccount.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
                 .thenReturn(new Transaction(0, firstAccount.getId(), amount, TransactionType.WITHDRAW));
 
-        when(mockTransactionRepo.createTransaction(eq(secondAccount.getId()), eq(expectedTransferAmount), eq(TransactionType.DEPOSIT)))
+        when(mockTransactionRepo.save(eq(secondAccount.getId()), eq(expectedTransferAmount), eq(TransactionType.DEPOSIT)))
                 .thenReturn(new Transaction(1, secondAccount.getId(), expectedTransferAmount, TransactionType.DEPOSIT));
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
@@ -237,15 +237,15 @@ public class AccountServiceTest {
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.findAccountById(firstAccount.getId())).thenReturn(Optional.of(firstAccount));
-        when(mockAccountRepo.findAccountById(secondAccount.getId())).thenReturn(Optional.of(secondAccount));
+        when(mockAccountRepo.findById(firstAccount.getId())).thenReturn(Optional.of(firstAccount));
+        when(mockAccountRepo.findById(secondAccount.getId())).thenReturn(Optional.of(secondAccount));
 
         when(mockFriendshipService.areFriends(defaultUserLogin, secondDefaultUserLogin)).thenReturn(false);
 
-        when(mockTransactionRepo.createTransaction(eq(firstAccount.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
+        when(mockTransactionRepo.save(eq(firstAccount.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
                 .thenReturn(new Transaction(0, firstAccount.getId(), amount, TransactionType.WITHDRAW));
 
-        when(mockTransactionRepo.createTransaction(eq(secondAccount.getId()), eq(expectedTransferAmount), eq(TransactionType.DEPOSIT)))
+        when(mockTransactionRepo.save(eq(secondAccount.getId()), eq(expectedTransferAmount), eq(TransactionType.DEPOSIT)))
                 .thenReturn(new Transaction(1, secondAccount.getId(), expectedTransferAmount, TransactionType.DEPOSIT));
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
@@ -267,9 +267,9 @@ public class AccountServiceTest {
         TransactionRepository mockTransactionRepo = mock(TransactionRepository.class);
         FriendshipService mockFriendshipService = mock(FriendshipService.class);
 
-        when(mockAccountRepo.findAccountById(accountId)).thenReturn(Optional.of(account));
+        when(mockAccountRepo.findById(accountId)).thenReturn(Optional.of(account));
 
-        when(mockTransactionRepo.createTransaction(eq(accountId), eq(balance), eq(TransactionType.DEPOSIT)))
+        when(mockTransactionRepo.save(eq(accountId), eq(balance), eq(TransactionType.DEPOSIT)))
                 .thenReturn(new Transaction(0, accountId, balance, TransactionType.DEPOSIT));
 
         AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);

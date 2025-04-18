@@ -65,6 +65,6 @@ public class FriendshipServiceImpl implements FriendshipService {
      */
     @Override
     public Set<String> getFriendLogins(String userLogin) {
-        return new HashSet<>(friendshipRepository.findFriendLogins(userLogin));
+        return new HashSet<>(friendshipRepository.findAllFriendsOf(userLogin));
     }
 }

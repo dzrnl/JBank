@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         try {
-            return userRepository.saveUser(user);
+            return userRepository.save(user);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("User with login '" + login + "' already exists", e);
         } catch (RuntimeException e) {
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User getUserByLogin(String login) {
-        return userRepository.findUserByLogin(login)
+        return userRepository.findByLogin(login)
                 .orElseThrow(() -> new NoSuchElementException("User with login '" + login + "' not found"));
     }
 
@@ -78,6 +78,6 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Set<User> getAllUsers() {
-        return new HashSet<>(userRepository.findAllUsers());
+        return new HashSet<>(userRepository.findAll());
     }
 }

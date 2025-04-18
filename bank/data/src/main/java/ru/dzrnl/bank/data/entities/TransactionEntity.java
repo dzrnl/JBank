@@ -18,7 +18,7 @@ import ru.dzrnl.bank.business.models.account.TransactionType;
 public class TransactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
