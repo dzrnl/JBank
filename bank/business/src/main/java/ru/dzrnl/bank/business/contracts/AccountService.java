@@ -27,6 +27,13 @@ public interface AccountService {
     Account getAccount(long accountId);
 
     /**
+     * Retrieves all accounts.
+     *
+     * @return a {@code Set} of all accounts
+     */
+    Set<Account> getAllAccounts();
+
+    /**
      * Retrieves all accounts belonging to a specific user.
      *
      * @param userLogin the login of the user whose accounts will be retrieved

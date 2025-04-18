@@ -61,6 +61,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     /**
+     * Retrieves all accounts.
+     *
+     * @return a {@code Set} of all accounts
+     */
+    @Override
+    public Set<Account> getAllAccounts() {
+        return new HashSet<>(accountRepository.findAll());
+    }
+
+    /**
      * Retrieves all accounts belonging to a specific user.
      *
      * @param userLogin the login of the user whose accounts will be retrieved

@@ -11,4 +11,6 @@ public interface AccountRepository {
     Optional<Account> findById(long accountId);
 
     List<Account> findAllByOwnerLogin(String ownerLogin);
+
+    List<Account> findAll();
 }

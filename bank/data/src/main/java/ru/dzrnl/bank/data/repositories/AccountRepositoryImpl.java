@@ -43,4 +43,11 @@ public class AccountRepositoryImpl implements AccountRepository {
                 .map(AccountMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public List<Account> findAll() {
+        return accountJpaRepository.findAll().stream()
+                .map(AccountMapper::toDomain)
+                .toList();
+    }
 }
