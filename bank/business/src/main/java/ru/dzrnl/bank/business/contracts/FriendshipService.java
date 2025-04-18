@@ -1,5 +1,7 @@
 package ru.dzrnl.bank.business.contracts;
 
+import ru.dzrnl.bank.business.models.user.User;
+
 import java.util.Set;
 
 /**
@@ -33,6 +35,14 @@ public interface FriendshipService {
      * @return {@code true} if the users are friends, otherwise {@code false}
      */
     boolean areFriends(String userLogin, String friendLogin);
+
+    /**
+     * Retrieves all friend ids for a given user.
+     *
+     * @param userId the id of the user whose friends are to be retrieved
+     * @return a {@code Set} of ids of the user's friends
+     */
+    Set<User> getFriends(long userId);
 
     /**
      * Retrieves all friend logins for a given user.

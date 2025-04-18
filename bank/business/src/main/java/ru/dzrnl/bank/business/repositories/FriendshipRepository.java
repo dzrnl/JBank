@@ -1,5 +1,7 @@
 package ru.dzrnl.bank.business.repositories;
 
+import ru.dzrnl.bank.business.models.user.User;
+
 import java.util.List;
 
 public interface FriendshipRepository {
@@ -9,5 +11,7 @@ public interface FriendshipRepository {
 
     boolean areFriends(String userLogin, String friendLogin);
 
-    List<String> findAllFriendsOf(String login);
+    List<User> findAllFriendsOfById(long userId);
+
+    List<String> findAllFriendsOfByLogin(String login);
 }

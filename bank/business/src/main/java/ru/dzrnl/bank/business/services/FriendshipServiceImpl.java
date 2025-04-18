@@ -2,6 +2,7 @@ package ru.dzrnl.bank.business.services;
 
 import org.springframework.stereotype.Service;
 import ru.dzrnl.bank.business.contracts.FriendshipService;
+import ru.dzrnl.bank.business.models.user.User;
 import ru.dzrnl.bank.business.repositories.FriendshipRepository;
 
 import java.util.HashSet;
@@ -58,6 +59,17 @@ public class FriendshipServiceImpl implements FriendshipService {
     }
 
     /**
+     * Retrieves all friend ids for a given user.
+     *
+     * @param userId the id of the user whose friends are to be retrieved
+     * @return a {@code Set} of ids of the user's friends
+     */
+    @Override
+    public Set<User> getFriends(long userId) {
+        return new HashSet<>(friendshipRepository.findAllFriendsOfById(userId));
+    }
+
+    /**
      * Retrieves all friend logins for a given user.
      *
      * @param userLogin the login of the user whose friends are to be retrieved
@@ -65,6 +77,6 @@ public class FriendshipServiceImpl implements FriendshipService {
      */
     @Override
     public Set<String> getFriendLogins(String userLogin) {
-        return new HashSet<>(friendshipRepository.findAllFriendsOf(userLogin));
+        return new HashSet<>(friendshipRepository.findAllFriendsOfByLogin(userLogin));
     }
 }
