@@ -11,6 +11,7 @@ import ru.dzrnl.bank.business.repositories.TransactionRepository;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link AccountService} for managing accounts.
@@ -171,6 +172,28 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Set<Transaction> getAllTransactions() {
         return new HashSet<>(transactionRepository.findAll());
+    }
+
+    @Override
+    public Set<Transaction> getAllTransactionsFilteredByAccount(long accountId) {
+        return getAllTransactions().stream()
+                .filter(transaction -> transaction.accountId() == accountId)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Transaction> getAllTransactionsFilteredByType(TransactionType type) {
+        return getAllTransactions().stream()
+                .filter(transaction -> transaction.type() == type)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Transaction> getAllTransactionsFilteredByAccountAndType(long accountId, TransactionType type) {
+        return getAllTransactions().stream()
+                .filter(transaction -> transaction.accountId() == accountId
+                        && transaction.type() == type)
+                .collect(Collectors.toSet());
     }
 
     /**

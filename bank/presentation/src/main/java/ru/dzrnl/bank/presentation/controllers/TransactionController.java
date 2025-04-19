@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.dzrnl.bank.business.contracts.AccountService;
+import ru.dzrnl.bank.business.models.account.Transaction;
 import ru.dzrnl.bank.business.models.account.TransactionType;
 import ru.dzrnl.bank.presentation.dto.TransactionDto;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/transactions")
@@ -35,9 +37,19 @@ public class TransactionController {
                                                    @RequestParam(required = false) Long accountId) {
         TransactionType typeEnum = type != null ? TransactionType.valueOf(type.toUpperCase()) : null;
 
-        return accountService.getAllTransactions().stream()
-                .filter(transaction -> (typeEnum == null || transaction.type() == typeEnum)
-                        && (accountId == null || transaction.accountId() == accountId))
+        Set<Transaction> result;
+        
+        if (type != null && accountId != null) {
+            result = accountService.getAllTransactionsFilteredByAccountAndType(accountId, typeEnum);
+        } else if (accountId != null) {
+            result = accountService.getAllTransactionsFilteredByAccount(accountId);
+        } else if (type != null) {
+            result = accountService.getAllTransactionsFilteredByType(typeEnum);
+        } else {
+            result = accountService.getAllTransactions();
+        }
+
+        return result.stream()
                 .map(TransactionDto::fromDomain)
                 .toList();
     }

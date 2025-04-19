@@ -2,6 +2,7 @@ package ru.dzrnl.bank.business.contracts;
 
 import ru.dzrnl.bank.business.models.account.Account;
 import ru.dzrnl.bank.business.models.account.Transaction;
+import ru.dzrnl.bank.business.models.account.TransactionType;
 
 import java.util.Set;
 
@@ -78,4 +79,25 @@ public interface AccountService {
      * @return a {@code Set} of all transactions
      */
     Set<Transaction> getAllTransactions();
+
+    /**
+     * Retrieves all filtered transactions.
+     *
+     * @return a {@code Set} of all filtered transactions
+     */
+    Set<Transaction> getAllTransactionsFilteredByAccount(long accountId);
+
+    /**
+     * Retrieves all filtered transactions.
+     *
+     * @return a {@code Set} of all filtered transactions
+     */
+    Set<Transaction> getAllTransactionsFilteredByType(TransactionType type);
+
+    /**
+     * Retrieves all filtered transactions.
+     *
+     * @return a {@code Set} of all filtered transactions
+     */
+    Set<Transaction> getAllTransactionsFilteredByAccountAndType(long accountId, TransactionType type);
 }
