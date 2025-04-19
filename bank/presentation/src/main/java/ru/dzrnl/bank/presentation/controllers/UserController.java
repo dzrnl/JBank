@@ -12,6 +12,7 @@ import ru.dzrnl.bank.business.contracts.UserService;
 import ru.dzrnl.bank.business.models.user.Gender;
 import ru.dzrnl.bank.business.models.user.HairColor;
 import ru.dzrnl.bank.business.models.user.User;
+import ru.dzrnl.bank.presentation.dto.UserCreateDto;
 import ru.dzrnl.bank.presentation.dto.UserDto;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Invalid request body")
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserCreateDto userDto) {
         try {
             User user = userService.createUser(userDto.getLogin(),
                     userDto.getName(),
