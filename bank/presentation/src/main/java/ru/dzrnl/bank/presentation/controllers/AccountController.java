@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.dzrnl.bank.business.contracts.AccountService;
 import ru.dzrnl.bank.presentation.dto.AccountDto;
+import ru.dzrnl.bank.presentation.dto.TransferDto;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -93,11 +94,13 @@ public class AccountController {
             @ApiResponse(responseCode = "404", description = "One or both accounts not found")
     })
     @PostMapping("/transfer")
-    public ResponseEntity<Void> transfer(@RequestParam long fromAccountId,
-                                         @RequestParam long toAccountId,
-                                         @RequestParam long amount) {
+    public ResponseEntity<Void> transfer(@RequestBody TransferDto transferDto) {
         try {
-            accountService.transferMoney(fromAccountId, toAccountId, amount);
+            accountService.transferMoney(
+                    transferDto.getFromAccountId(),
+                    transferDto.getToAccountId(),
+                    transferDto.getAmount()
+            );
             return ResponseEntity.ok().build();
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
