@@ -16,7 +16,6 @@ import ru.dzrnl.bank.presentation.dto.UserCreateDto;
 import ru.dzrnl.bank.presentation.dto.UserDto;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 @RestController
@@ -37,17 +36,13 @@ public class UserController {
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> createUser(@RequestBody UserCreateDto userDto) {
-        try {
-            User user = userService.createUser(userDto.getLogin(),
-                    userDto.getName(),
-                    userDto.getAge(),
-                    userDto.getGender(),
-                    userDto.getHairColor());
+        User user = userService.createUser(userDto.getLogin(),
+                userDto.getName(),
+                userDto.getAge(),
+                userDto.getGender(),
+                userDto.getHairColor());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.fromDomain(user));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.fromDomain(user));
     }
 
     @Operation(summary = "Get user by ID")
@@ -57,12 +52,8 @@ public class UserController {
     })
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable long userId) {
-        try {
-            User user = userService.getUserById(userId);
-            return ResponseEntity.ok(UserDto.fromDomain(user));
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(UserDto.fromDomain(user));
     }
 
     @Operation(summary = "Add a friend for the user")
@@ -72,15 +63,12 @@ public class UserController {
     })
     @PostMapping("/{userId}/friends/{friendId}")
     public ResponseEntity<Void> addFriend(@PathVariable long userId, @PathVariable long friendId) {
-        try {
-            User user = userService.getUserById(userId);
-            User friend = userService.getUserById(friendId);
+        User user = userService.getUserById(userId);
+        User friend = userService.getUserById(friendId);
 
-            friendshipService.addFriend(user.getLogin(), friend.getLogin());
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+        friendshipService.addFriend(user.getLogin(), friend.getLogin());
+
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Remove a friend from the user")
@@ -90,15 +78,12 @@ public class UserController {
     })
     @DeleteMapping("/{userId}/friends/{friendId}")
     public ResponseEntity<Void> removeFriend(@PathVariable long userId, @PathVariable long friendId) {
-        try {
-            User user = userService.getUserById(userId);
-            User friend = userService.getUserById(friendId);
+        User user = userService.getUserById(userId);
+        User friend = userService.getUserById(friendId);
 
-            friendshipService.removeFriend(user.getLogin(), friend.getLogin());
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+        friendshipService.removeFriend(user.getLogin(), friend.getLogin());
+
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Get a user's friends by user ID")

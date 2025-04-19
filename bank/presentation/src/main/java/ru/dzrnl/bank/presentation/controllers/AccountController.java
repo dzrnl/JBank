@@ -12,7 +12,6 @@ import ru.dzrnl.bank.presentation.dto.AccountDto;
 import ru.dzrnl.bank.presentation.dto.TransferDto;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("api/accounts")
@@ -63,12 +62,8 @@ public class AccountController {
     })
     @PostMapping("/{accountId}/deposit")
     public ResponseEntity<Void> deposit(@PathVariable long accountId, @RequestParam long amount) {
-        try {
-            accountService.depositMoney(accountId, amount);
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+        accountService.depositMoney(accountId, amount);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Withdraw money from an account")
@@ -79,12 +74,8 @@ public class AccountController {
     })
     @PostMapping("/{accountId}/withdraw")
     public ResponseEntity<AccountDto> withdraw(@PathVariable long accountId, @RequestParam long amount) {
-        try {
-            accountService.withdrawMoney(accountId, amount);
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+        accountService.withdrawMoney(accountId, amount);
+        return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Transfer money between accounts")
@@ -95,16 +86,12 @@ public class AccountController {
     })
     @PostMapping("/transfer")
     public ResponseEntity<Void> transfer(@RequestBody TransferDto transferDto) {
-        try {
-            accountService.transferMoney(
-                    transferDto.getFromAccountId(),
-                    transferDto.getToAccountId(),
-                    transferDto.getAmount()
-            );
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+        accountService.transferMoney(
+                transferDto.getFromAccountId(),
+                transferDto.getToAccountId(),
+                transferDto.getAmount()
+        );
 
+        return ResponseEntity.ok().build();
     }
 }
