@@ -10,6 +10,7 @@ import ru.dzrnl.bank.business.repositories.UserRepository;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -53,5 +54,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public Set<User> getAllUsers() {
         return new HashSet<>(userRepository.findAll());
+    }
+
+    @Override
+    public Set<User> getAllUsersFilteredByGender(Gender gender) {
+        return getAllUsers().stream()
+                .filter(user -> user.getGender() == gender)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<User> getAllUsersFilteredByHairColor(HairColor hairColor) {
+        return getAllUsers().stream()
+                .filter(user -> user.getHairColor() == hairColor)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<User> getAllUsersFilteredByGenderHairColor(Gender gender, HairColor hairColor) {
+        return getAllUsers().stream()
+                .filter(user -> user.getGender() == gender
+                        && user.getHairColor() == hairColor)
+                .collect(Collectors.toSet());
     }
 }

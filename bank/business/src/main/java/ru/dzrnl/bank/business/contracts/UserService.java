@@ -50,4 +50,25 @@ public interface UserService {
      * @return a {@code Set} of all users
      */
     Set<User> getAllUsers();
+
+    /**
+     * Retrieves all filtered users.
+     *
+     * @return a {@code Set} of all filtered users
+     */
+    Set<User> getAllUsersFilteredByGender(Gender gender);
+
+    /**
+     * Retrieves all filtered users.
+     *
+     * @return a {@code Set} of all filtered users
+     */
+    Set<User> getAllUsersFilteredByHairColor(HairColor hairColor);
+
+    /**
+     * Retrieves all filtered users.
+     *
+     * @return a {@code Set} of all filtered users
+     */
+    Set<User> getAllUsersFilteredByGenderHairColor(Gender gender, HairColor hairColor);
 }

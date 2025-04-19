@@ -17,6 +17,7 @@ import ru.dzrnl.bank.presentation.dto.UserDto;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/users")
@@ -122,9 +123,19 @@ public class UserController {
         Gender genderEnum = gender != null ? Gender.valueOf(gender.toUpperCase()) : null;
         HairColor hairColorEnum = hairColor != null ? HairColor.valueOf(hairColor.toUpperCase()) : null;
 
-        return userService.getAllUsers().stream()
-                .filter(user -> (genderEnum == null || user.getGender() == genderEnum)
-                        && (hairColorEnum == null || user.getHairColor() == hairColorEnum))
+        Set<User> result;
+
+        if (gender != null && hairColor != null) {
+            result = userService.getAllUsersFilteredByGenderHairColor(genderEnum, hairColorEnum);
+        } else if (gender != null) {
+            result = userService.getAllUsersFilteredByGender(genderEnum);
+        } else if (hairColor != null) {
+            result = userService.getAllUsersFilteredByHairColor(hairColorEnum);
+        } else {
+            result = userService.getAllUsers();
+        }
+
+        return result.stream()
                 .map(UserDto::fromDomain)
                 .toList();
     }
