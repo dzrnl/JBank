@@ -27,6 +27,15 @@ public interface UserService {
     User createUser(String login, String name, int age, Gender gender, HairColor hairColor);
 
     /**
+     * Retrieves a user by their id.
+     *
+     * @param userId the login of the user to retrieve
+     * @return the user associated with the provided login
+     * @throws NoSuchElementException if no user with the given login is found
+     */
+    User getUserById(long userId);
+
+    /**
      * Retrieves a user by their login.
      *
      * @param login the login of the user to retrieve
@@ -41,4 +50,25 @@ public interface UserService {
      * @return a {@code Set} of all users
      */
     Set<User> getAllUsers();
+
+    /**
+     * Retrieves all filtered users.
+     *
+     * @return a {@code Set} of all filtered users
+     */
+    Set<User> getAllUsersFilteredByGender(Gender gender);
+
+    /**
+     * Retrieves all filtered users.
+     *
+     * @return a {@code Set} of all filtered users
+     */
+    Set<User> getAllUsersFilteredByHairColor(HairColor hairColor);
+
+    /**
+     * Retrieves all filtered users.
+     *
+     * @return a {@code Set} of all filtered users
+     */
+    Set<User> getAllUsersFilteredByGenderHairColor(Gender gender, HairColor hairColor);
 }

@@ -1,6 +1,8 @@
 package ru.dzrnl.bank.business.contracts;
 
 import ru.dzrnl.bank.business.models.account.Account;
+import ru.dzrnl.bank.business.models.account.Transaction;
+import ru.dzrnl.bank.business.models.account.TransactionType;
 
 import java.util.Set;
 
@@ -25,6 +27,13 @@ public interface AccountService {
      * @throws IllegalArgumentException if no account with the given ID is found
      */
     Account getAccount(long accountId);
+
+    /**
+     * Retrieves all accounts.
+     *
+     * @return a {@code Set} of all accounts
+     */
+    Set<Account> getAllAccounts();
 
     /**
      * Retrieves all accounts belonging to a specific user.
@@ -63,4 +72,32 @@ public interface AccountService {
      * @throws IllegalStateException    if a withdrawal is attempted with insufficient funds
      */
     void transferMoney(long fromAccountId, long toAccountId, long amount);
+
+    /**
+     * Retrieves all transactions.
+     *
+     * @return a {@code Set} of all transactions
+     */
+    Set<Transaction> getAllTransactions();
+
+    /**
+     * Retrieves all filtered transactions.
+     *
+     * @return a {@code Set} of all filtered transactions
+     */
+    Set<Transaction> getAllTransactionsFilteredByAccount(long accountId);
+
+    /**
+     * Retrieves all filtered transactions.
+     *
+     * @return a {@code Set} of all filtered transactions
+     */
+    Set<Transaction> getAllTransactionsFilteredByType(TransactionType type);
+
+    /**
+     * Retrieves all filtered transactions.
+     *
+     * @return a {@code Set} of all filtered transactions
+     */
+    Set<Transaction> getAllTransactionsFilteredByAccountAndType(long accountId, TransactionType type);
 }

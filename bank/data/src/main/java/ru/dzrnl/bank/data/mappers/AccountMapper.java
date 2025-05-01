@@ -10,20 +10,21 @@ import java.util.stream.Collectors;
 
 public class AccountMapper {
     public static AccountEntity toEntity(Account account, UserEntity owner) {
-        AccountEntity accountEntity = AccountEntity.builder()
-                .id((int) account.getId())
+        AccountEntity.AccountEntityBuilder builder = AccountEntity.builder()
                 .owner(owner)
-                .balance(account.getBalance())
-                .build();
+                .balance(account.getBalance());
+
+        if (account.getId() != null) {
+            builder.id(account.getId());
+        }
+
+        AccountEntity accountEntity = builder.build();
 
         if (account.getTransactionHistory() != null) {
             accountEntity.setTransactionHistory(account.getTransactionHistory().stream()
                     .map(transaction -> TransactionMapper.toEntity(transaction, accountEntity))
                     .toList());
         }
-        accountEntity.setTransactionHistory(account.getTransactionHistory().stream()
-                .map(transaction -> TransactionMapper.toEntity(transaction, accountEntity))
-                .toList());
 
         return accountEntity;
     }
@@ -37,8 +38,8 @@ public class AccountMapper {
         }
 
         return new Account(account.getId(),
-                account.getOwner().getLogin(),
                 account.getBalance(),
+                account.getOwner().getLogin(),
                 transactionHistory);
     }
 }

@@ -5,20 +5,28 @@ import ru.dzrnl.bank.data.entities.UserEntity;
 
 public class UserMapper {
     public static UserEntity toEntity(User user) {
-        return UserEntity.builder()
-                .login(user.login())
-                .name(user.name())
-                .age(user.age())
-                .gender(user.gender())
-                .hairColor(user.hairColor())
-                .build();
+        UserEntity.UserEntityBuilder builder = UserEntity.builder()
+                .login(user.getLogin())
+                .name(user.getName())
+                .age(user.getAge())
+                .gender(user.getGender())
+                .hairColor(user.getHairColor());
+
+        if (user.getId() != null) {
+            builder.id(user.getId());
+        }
+
+        return builder.build();
     }
 
     public static User toDomain(UserEntity user) {
-        return new User(user.getLogin(),
-                user.getName(),
-                user.getAge(),
-                user.getGender(),
-                user.getHairColor());
+        return User.builder()
+                .id(user.getId())
+                .login(user.getLogin())
+                .name(user.getName())
+                .age(user.getAge())
+                .gender(user.getGender())
+                .hairColor(user.getHairColor())
+                .build();
     }
 }

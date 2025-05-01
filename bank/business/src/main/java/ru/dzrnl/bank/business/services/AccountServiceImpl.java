@@ -1,5 +1,6 @@
 package ru.dzrnl.bank.business.services;
 
+import org.springframework.stereotype.Service;
 import ru.dzrnl.bank.business.contracts.AccountService;
 import ru.dzrnl.bank.business.contracts.FriendshipService;
 import ru.dzrnl.bank.business.models.account.Account;
@@ -10,10 +11,12 @@ import ru.dzrnl.bank.business.repositories.TransactionRepository;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link AccountService} for managing accounts.
  */
+@Service
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
@@ -40,7 +43,9 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Account createAccount(String userLogin) {
-        return accountRepository.createAccount(userLogin);
+        var account = new Account(userLogin);
+
+        return accountRepository.save(account);
     }
 
     /**
@@ -52,8 +57,18 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Account getAccount(long accountId) {
-        return accountRepository.findAccountById(accountId)
+        return accountRepository.findById(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("Account with id '" + accountId + "' not found"));
+    }
+
+    /**
+     * Retrieves all accounts.
+     *
+     * @return a {@code Set} of all accounts
+     */
+    @Override
+    public Set<Account> getAllAccounts() {
+        return new HashSet<>(accountRepository.findAll());
     }
 
     /**
@@ -64,7 +79,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Set<Account> getAllUserAccounts(String userLogin) {
-        return new HashSet<>(accountRepository.findAllUserAccounts(userLogin));
+        return new HashSet<>(accountRepository.findAllByOwnerLogin(userLogin));
     }
 
     /**
@@ -79,7 +94,7 @@ public class AccountServiceImpl implements AccountService {
     public void withdrawMoney(long accountId, long amount) {
         Account account = getAccount(accountId);
 
-        Transaction transaction = transactionRepository.createTransaction(
+        Transaction transaction = transactionRepository.save(
                 accountId,
                 amount,
                 TransactionType.WITHDRAW
@@ -103,7 +118,7 @@ public class AccountServiceImpl implements AccountService {
     public void depositMoney(long accountId, long amount) {
         Account account = getAccount(accountId);
 
-        Transaction transaction = transactionRepository.createTransaction(
+        Transaction transaction = transactionRepository.save(
                 accountId,
                 amount,
                 TransactionType.DEPOSIT
@@ -126,7 +141,7 @@ public class AccountServiceImpl implements AccountService {
         var fromAccount = getAccount(fromAccountId);
         var toAccount = getAccount(toAccountId);
 
-        Transaction fromTransaction = transactionRepository.createTransaction(
+        Transaction fromTransaction = transactionRepository.save(
                 fromAccountId,
                 amount,
                 TransactionType.WITHDRAW
@@ -140,13 +155,45 @@ public class AccountServiceImpl implements AccountService {
 
         amount = calculateTransferAmountWithFee(fromAccount, toAccount, amount);
 
-        Transaction toTransaction = transactionRepository.createTransaction(
+        Transaction toTransaction = transactionRepository.save(
                 toAccountId,
                 amount,
                 TransactionType.DEPOSIT
         );
 
         executeTransaction(toTransaction, toAccount);
+    }
+
+    /**
+     * Retrieves all transactions.
+     *
+     * @return a {@code Set} of all transactions
+     */
+    @Override
+    public Set<Transaction> getAllTransactions() {
+        return new HashSet<>(transactionRepository.findAll());
+    }
+
+    @Override
+    public Set<Transaction> getAllTransactionsFilteredByAccount(long accountId) {
+        return getAllTransactions().stream()
+                .filter(transaction -> transaction.accountId() == accountId)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Transaction> getAllTransactionsFilteredByType(TransactionType type) {
+        return getAllTransactions().stream()
+                .filter(transaction -> transaction.type() == type)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Transaction> getAllTransactionsFilteredByAccountAndType(long accountId, TransactionType type) {
+        return getAllTransactions().stream()
+                .filter(transaction -> transaction.accountId() == accountId
+                        && transaction.type() == type)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -177,10 +224,10 @@ public class AccountServiceImpl implements AccountService {
      * Executes a transaction and updates the associated account.
      *
      * @param transaction the transaction to execute
-     * @param account the account that will be updated after the transaction is executed
+     * @param account     the account that will be updated after the transaction is executed
      */
     private void executeTransaction(Transaction transaction, Account account) {
         transaction.execute(account);
-        accountRepository.updateAccount(account);
+        accountRepository.save(account);
     }
 }

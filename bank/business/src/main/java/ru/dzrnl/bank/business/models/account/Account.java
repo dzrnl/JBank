@@ -1,44 +1,29 @@
 package ru.dzrnl.bank.business.models.account;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a bank account belonging to a user.
  */
+@Data
+@AllArgsConstructor
 public class Account {
-    private final long id;
+    private final Long id;
     private long balance;
     private final String ownerLogin;
     private final List<Transaction> transactionHistory;
 
-    /**
-     * Creates a new account with zero balance.
-     *
-     * @param id         unique account identifier
-     * @param ownerLogin login of the account owner
-     */
-    public Account(long id, String ownerLogin) {
+    public Account(String ownerLogin) {
+        this.id = null;
         this.balance = 0;
-        this.id = id;
         this.ownerLogin = ownerLogin;
         this.transactionHistory = new ArrayList<>();
-    }
-
-    /**
-     * Creates a new account.
-     *
-     * @param id                 unique account identifier
-     * @param ownerLogin         login of the account owner
-     * @param balance            the initial balance of the account
-     * @param transactionHistory the list of transactions associated with this account
-     */
-    public Account(long id, String ownerLogin, long balance, ArrayList<Transaction> transactionHistory) {
-        this.id = id;
-        this.ownerLogin = ownerLogin;
-        this.balance = balance;
-        this.transactionHistory = transactionHistory;
     }
 
     /**
@@ -52,7 +37,7 @@ public class Account {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Account other = (Account) obj;
-        return id == other.id;
+        return Objects.equals(id, other.id);
     }
 
     /**
@@ -62,34 +47,7 @@ public class Account {
      */
     @Override
     public int hashCode() {
-        return Long.hashCode(id);
-    }
-
-    /**
-     * Returns the account ID for this account.
-     *
-     * @return the account ID
-     */
-    public long getId() {
-        return id;
-    }
-
-    /**
-     * Returns the current balance for this account.
-     *
-     * @return current account balance
-     */
-    public long getBalance() {
-        return balance;
-    }
-
-    /**
-     * Returns the owner's login for this account.
-     *
-     * @return owner's login
-     */
-    public String getOwnerLogin() {
-        return ownerLogin;
+        return id != null ? id.hashCode() : 0;
     }
 
     /**

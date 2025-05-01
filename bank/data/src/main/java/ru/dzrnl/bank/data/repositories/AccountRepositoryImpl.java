@@ -1,110 +1,53 @@
 package ru.dzrnl.bank.data.repositories;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 import ru.dzrnl.bank.business.models.account.Account;
 import ru.dzrnl.bank.business.repositories.AccountRepository;
 import ru.dzrnl.bank.data.entities.AccountEntity;
 import ru.dzrnl.bank.data.entities.UserEntity;
 import ru.dzrnl.bank.data.mappers.AccountMapper;
+import ru.dzrnl.bank.data.repositories.jpa.AccountJpaRepository;
+import ru.dzrnl.bank.data.repositories.jpa.UserJpaRepository;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
-/**
- * Implementation of the {@link AccountRepository} interface for managing accounts.
- * Uses an in-memory storage ({@code HashMap}) to store accounts.
- */
+@Repository
 public class AccountRepositoryImpl implements AccountRepository {
-    private final SessionFactory sessionFactory;
+    private final AccountJpaRepository accountJpaRepository;
+    private final UserJpaRepository userJpaRepository;
 
-    /**
-     * Default constructor for AccountRepositoryImpl class.
-     */
-    public AccountRepositoryImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
-    /**
-     * Creates a new account for a user.
-     *
-     * @param ownerLogin the login of the account's owner
-     * @return the created Account
-     */
-    @Override
-    public Account createAccount(String ownerLogin) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-
-            UserEntity owner = getUserByLogin(session, ownerLogin);
-
-            AccountEntity account = AccountEntity.builder().owner(owner).build();
-
-            session.persist(account);
-            transaction.commit();
-
-            return AccountMapper.toDomain(account);
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw e;
-        }
+    public AccountRepositoryImpl(AccountJpaRepository accountJpaRepository, UserJpaRepository userJpaRepository) {
+        this.accountJpaRepository = accountJpaRepository;
+        this.userJpaRepository = userJpaRepository;
     }
 
     @Override
-    public void updateAccount(Account account) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
+    public Account save(Account account) {
+        UserEntity owner = userJpaRepository.findByLogin(account.getOwnerLogin())
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + account.getOwnerLogin()));
 
-            UserEntity owner = getUserByLogin(session, account.getOwnerLogin());
-
-            AccountEntity accountEntity = AccountMapper.toEntity(account, owner);
-
-            session.merge(accountEntity);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            throw e;
-        }
+        AccountEntity entity = AccountMapper.toEntity(account, owner);
+        AccountEntity saved = accountJpaRepository.save(entity);
+        return AccountMapper.toDomain(saved);
     }
 
-    /**
-     * Retrieves an account by its unique ID.
-     *
-     * @param accountId the ID of the account to retrieve
-     * @return an {@code Optional} containing the account if found, otherwise an empty {@code Optional}
-     */
     @Override
-    public Optional<Account> findAccountById(long accountId) {
-        try (Session session = sessionFactory.openSession()) {
-            AccountEntity account = session.get(AccountEntity.class, accountId);
-            if (account == null) return Optional.empty();
-            return Optional.of(AccountMapper.toDomain(account));
-        }
+    public Optional<Account> findById(long accountId) {
+        return accountJpaRepository.findById(accountId).map(AccountMapper::toDomain);
     }
 
-    /**
-     * Retrieves all accounts associated with a specific user.
-     *
-     * @param ownerLogin the login of the account's owner
-     * @return a {@code List} of all accounts belonging to the user
-     */
     @Override
-    public List<Account> findAllUserAccounts(String ownerLogin) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM AccountEntity WHERE owner.login = :ownerLogin", AccountEntity.class)
-                    .setParameter("ownerLogin", ownerLogin)
-                    .getResultList().stream().map(AccountMapper::toDomain).toList();
-        }
+    public List<Account> findAllByOwnerLogin(String ownerLogin) {
+        return accountJpaRepository.findAllByOwner_Login(ownerLogin).stream()
+                .map(AccountMapper::toDomain)
+                .toList();
     }
 
-    private UserEntity getUserByLogin(Session session, String login) {
-        Query<UserEntity> query = session.createQuery(
-                "FROM UserEntity u WHERE u.login = :login", UserEntity.class
-        );
-        query.setParameter("login", login);
-        return query.uniqueResult();
+    @Override
+    public List<Account> findAll() {
+        return accountJpaRepository.findAll().stream()
+                .map(AccountMapper::toDomain)
+                .toList();
     }
 }

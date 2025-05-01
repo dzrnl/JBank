@@ -14,42 +14,44 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class UserServiceTest {
-    private final User defaultUser = getDefaultUser();
-    private final User secondDefaultUser = getSecondDefaultUser();
+    private final User defaultUser = getDefaultUser(false);
+    private final User defaultSavedUser = getDefaultUser(true);
+    private final User secondDefaultUser = getSecondDefaultUser(false);
+    private final User secondDefaultSavedUser = getSecondDefaultUser(true);
 
     @Test
     public void shouldCreateUser() {
-        String userLogin = defaultUser.login();
-        String userName = defaultUser.name();
-        int age = defaultUser.age();
-        Gender gender = defaultUser.gender();
-        HairColor hairColor = defaultUser.hairColor();
+        String userLogin = defaultUser.getLogin();
+        String userName = defaultUser.getName();
+        int age = defaultUser.getAge();
+        Gender gender = defaultUser.getGender();
+        HairColor hairColor = defaultUser.getHairColor();
 
         UserRepository mockRepo = mock(UserRepository.class);
-        doNothing().when(mockRepo).saveUser(argThat(user -> user.login().equals(userLogin)));
+        when(mockRepo.save(argThat(user -> user.getLogin().equals(userLogin)))).thenReturn(defaultSavedUser);
 
         UserService userService = new UserServiceImpl(mockRepo);
 
         userService.createUser(userLogin, userName, age, gender, hairColor);
 
-        verify(mockRepo, times(1)).saveUser(argThat(user -> user.login().equals(userLogin)
-                && user.name().equals(userName)
-                && user.age() == age
-                && user.gender() == gender
-                && user.hairColor() == hairColor));
+        verify(mockRepo, times(1)).save(argThat(user -> user.getLogin().equals(userLogin)
+                && user.getName().equals(userName)
+                && user.getAge() == age
+                && user.getGender() == gender
+                && user.getHairColor() == hairColor));
     }
 
     @Test
     public void shouldThrowExceptionIfUserAlreadyExists() {
-        String userLogin = defaultUser.login();
-        String userName = defaultUser.name();
-        int age = defaultUser.age();
-        Gender gender = defaultUser.gender();
-        HairColor hairColor = defaultUser.hairColor();
+        String userLogin = defaultUser.getLogin();
+        String userName = defaultUser.getName();
+        int age = defaultUser.getAge();
+        Gender gender = defaultUser.getGender();
+        HairColor hairColor = defaultUser.getHairColor();
 
         UserRepository mockRepo = mock(UserRepository.class);
         doThrow(new IllegalArgumentException())
-                .when(mockRepo).saveUser(argThat(user -> user.login().equals(userLogin)));
+                .when(mockRepo).save(argThat(user -> user.getLogin().equals(userLogin)));
 
         UserService userService = new UserServiceImpl(mockRepo);
 
@@ -59,25 +61,25 @@ public class UserServiceTest {
 
     @Test
     public void shouldGetUserByLogin() {
-        String userLogin = defaultUser.login();
+        String userLogin = defaultUser.getLogin();
 
         UserRepository mockRepo = mock(UserRepository.class);
-        when(mockRepo.findUserByLogin(userLogin)).thenReturn(Optional.of(defaultUser));
+        when(mockRepo.findByLogin(userLogin)).thenReturn(Optional.of(defaultUser));
 
         UserService userService = new UserServiceImpl(mockRepo);
 
         User foundUser = userService.getUserByLogin(userLogin);
 
         assertNotNull(foundUser);
-        assertEquals(userLogin, foundUser.login());
+        assertEquals(userLogin, foundUser.getLogin());
     }
 
     @Test
     public void shouldNotGetUserByLogin() {
-        String userLogin = defaultUser.login();
+        String userLogin = defaultUser.getLogin();
 
         UserRepository mockRepo = mock(UserRepository.class);
-        when(mockRepo.findUserByLogin(userLogin)).thenReturn(Optional.empty());
+        when(mockRepo.findByLogin(userLogin)).thenReturn(Optional.empty());
 
         UserService userService = new UserServiceImpl(mockRepo);
 
@@ -97,28 +99,38 @@ public class UserServiceTest {
 
         assertTrue(userService.getAllUsers().isEmpty());
 
-        when(mockRepo.findAllUsers()).thenReturn(users);
+        when(mockRepo.findAll()).thenReturn(users);
 
         assertEquals(userService.getAllUsers(), new HashSet<>(users));
     }
 
-    private static User getDefaultUser() {
-        String userLogin = "ivanov";
-        String userName = "Ivan Ivanov";
-        int age = 30;
-        Gender gender = Gender.MALE;
-        HairColor hairColor = HairColor.BROWN;
+    private static User getDefaultUser(boolean saved) {
+        User.UserBuilder builder = User.builder()
+                .login("ivanov")
+                .name("Ivan Ivanov")
+                .age(30)
+                .gender(Gender.MALE)
+                .hairColor(HairColor.BROWN);
 
-        return new User(userLogin, userName, age, gender, hairColor);
+        if (saved) {
+            builder.id(1L);
+        }
+
+        return builder.build();
     }
 
-    private static User getSecondDefaultUser() {
-        String userLogin = "petrov";
-        String userName = "Petar Petrov";
-        int age = 20;
-        Gender gender = Gender.MALE;
-        HairColor hairColor = HairColor.BLACK;
+    private static User getSecondDefaultUser(boolean saved) {
+        User.UserBuilder builder = User.builder()
+                .login("petrov")
+                .name("Peter Petrov")
+                .age(20)
+                .gender(Gender.MALE)
+                .hairColor(HairColor.BLACK);
 
-        return new User(userLogin, userName, age, gender, hairColor);
+        if (saved) {
+            builder.id(2L);
+        }
+
+        return builder.build();
     }
 }
