@@ -44,12 +44,17 @@ public class AccountController {
                 .toList();
     }
 
+    @GetMapping("/{accountId}")
+    public AccountDto getAccountsByUserId(@PathVariable Long accountId) {
+        return AccountDto.fromDomain(accountService.getAccount(accountId));
+    }
+
     @Operation(summary = "Get all accounts of a specific user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User accounts retrieved successfully")
     })
     @GetMapping("/user/{userLogin}")
-    public List<AccountDto> getAccountsByUserId(@PathVariable String userLogin) {
+    public List<AccountDto> getAccountsByUserLogin(@PathVariable String userLogin) {
         return accountService.getAllUserAccounts(userLogin).stream()
                 .map(AccountDto::fromDomain)
                 .toList();
