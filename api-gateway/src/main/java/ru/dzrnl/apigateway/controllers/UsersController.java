@@ -46,19 +46,12 @@ public class UsersController {
         }
     }
 
-    @PostMapping(path = "/admin", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping( "/admin")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> createAdmin(@RequestBody JsonNode jsonNode) {
-        try {
-            AuthRequest authRequest = new ObjectMapper().treeToValue(jsonNode, AuthRequest.class);
+    public ResponseEntity<String> createAdmin(@RequestBody AuthRequest request) {
+        gatewayService.createAdmin(request.getLogin(), request.getPassword());
 
-            gatewayService.createAdmin(authRequest.getLogin(), authRequest.getPassword());
-
-            return ResponseEntity.ok().build();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid JSON");
-        }
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{userId}")

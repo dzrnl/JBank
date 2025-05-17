@@ -2,10 +2,7 @@ package ru.dzrnl.apigateway.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -47,6 +44,20 @@ public class ProxyUtil {
         String query = request.getQueryString();
         String url = baseUrl + path + (query != null ? "?" + query : "");
         HttpEntity<String> entity = new HttpEntity<>(body, extractHeaders(request));
+        return restTemplate.exchange(url, method, entity, String.class);
+    }
+
+    public ResponseEntity<String> forwardRequestContentTypeJson(HttpServletRequest request,
+                                                                String path,
+                                                                HttpMethod method,
+                                                                String body) {
+        String query = request.getQueryString();
+        String url = baseUrl + path + (query != null ? "?" + query : "");
+
+        HttpHeaders headers = extractHeaders(request);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
         return restTemplate.exchange(url, method, entity, String.class);
     }
 }

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -85,11 +84,11 @@ public class AccountsController {
         }
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE) //
+    @PostMapping
     @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> createAccount(HttpServletRequest request, Authentication authentication) {
         String userLogin = ((CustomUserDetails) authentication.getPrincipal()).getUsername();
-        return proxyUtil.forwardRequest(request, "/api/accounts", HttpMethod.POST, userLogin);
+        return proxyUtil.forwardRequestContentTypeJson(request, "/api/accounts", HttpMethod.POST, userLogin);
     }
 
     @PostMapping("/{accountId}/deposit")
