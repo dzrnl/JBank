@@ -31,8 +31,8 @@ public class ProxyUtil {
             while (headerNames.hasMoreElements()) {
                 String headerName = headerNames.nextElement();
                 if ("host".equalsIgnoreCase(headerName)) continue;
-                if ("content-length".equalsIgnoreCase(headerName)) continue;      // исключаем
-                if ("transfer-encoding".equalsIgnoreCase(headerName)) continue;   // исключаем
+                if ("content-length".equalsIgnoreCase(headerName)) continue;
+                if ("transfer-encoding".equalsIgnoreCase(headerName)) continue;
                 List<String> headerValues = Collections.list(request.getHeaders(headerName));
                 headers.put(headerName, headerValues);
             }
