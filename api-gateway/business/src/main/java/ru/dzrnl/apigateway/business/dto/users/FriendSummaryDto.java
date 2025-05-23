@@ -1,4 +1,4 @@
-package ru.dzrnl.apigateway.business.dto;
+package ru.dzrnl.apigateway.business.dto.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class FriendSummaryDto {
     private Long id;
-    private String login;
     private String name;
-    private int age;
-    private Gender gender;
-    private HairColor hairColor;
 }

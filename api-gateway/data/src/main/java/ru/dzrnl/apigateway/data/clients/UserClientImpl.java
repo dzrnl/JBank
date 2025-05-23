@@ -3,9 +3,9 @@ package ru.dzrnl.apigateway.data.clients;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.dzrnl.apigateway.business.clients.UserClient;
-import ru.dzrnl.apigateway.business.dto.UserDto;
-import ru.dzrnl.apigateway.business.dto.Gender;
-import ru.dzrnl.apigateway.business.dto.HairColor;
+import ru.dzrnl.apigateway.business.dto.users.UserDto;
+import ru.dzrnl.apigateway.business.dto.users.Gender;
+import ru.dzrnl.apigateway.business.dto.users.HairColor;
 import ru.dzrnl.apigateway.data.dto.CreateUserRequest;
 
 import java.util.Arrays;

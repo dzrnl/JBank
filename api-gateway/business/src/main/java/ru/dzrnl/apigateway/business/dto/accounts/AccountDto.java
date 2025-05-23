@@ -1,4 +1,4 @@
-package ru.dzrnl.apigateway.business.dto;
+package ru.dzrnl.apigateway.business.dto.accounts;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FriendSummaryDto {
+public class AccountDto {
     private Long id;
-    private String name;
+    private long balance;
+    private String ownerLogin;
 }

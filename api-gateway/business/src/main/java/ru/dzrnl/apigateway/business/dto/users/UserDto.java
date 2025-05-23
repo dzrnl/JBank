@@ -1,17 +1,16 @@
-package ru.dzrnl.apigateway.data.dto;
+package ru.dzrnl.apigateway.business.dto.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.dzrnl.apigateway.business.dto.users.Gender;
-import ru.dzrnl.apigateway.business.dto.users.HairColor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateUserRequest {
+public class UserDto {
+    private Long id;
     private String login;
     private String name;
     private int age;

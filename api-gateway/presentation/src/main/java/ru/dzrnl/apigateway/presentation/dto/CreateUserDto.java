@@ -1,8 +1,8 @@
 package ru.dzrnl.apigateway.presentation.dto;
 
 import lombok.Data;
-import ru.dzrnl.apigateway.business.dto.Gender;
-import ru.dzrnl.apigateway.business.dto.HairColor;
+import ru.dzrnl.apigateway.business.dto.users.Gender;
+import ru.dzrnl.apigateway.business.dto.users.HairColor;
 
 @Data
 public class CreateUserDto {

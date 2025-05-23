@@ -1,4 +1,4 @@
-package ru.dzrnl.apigateway.business.dto;
+package ru.dzrnl.apigateway.business.dto.users;
 
 public enum HairColor {
     BLONDE,

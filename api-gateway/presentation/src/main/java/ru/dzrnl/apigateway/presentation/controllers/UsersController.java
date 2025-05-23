@@ -5,10 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.dzrnl.apigateway.business.contracts.UserService;
-import ru.dzrnl.apigateway.business.dto.FriendSummaryDto;
-import ru.dzrnl.apigateway.business.dto.Gender;
-import ru.dzrnl.apigateway.business.dto.HairColor;
-import ru.dzrnl.apigateway.business.dto.UserDto;
+import ru.dzrnl.apigateway.business.dto.users.FriendSummaryDto;
+import ru.dzrnl.apigateway.business.dto.users.Gender;
+import ru.dzrnl.apigateway.business.dto.users.HairColor;
+import ru.dzrnl.apigateway.business.dto.users.UserDto;
 import ru.dzrnl.apigateway.presentation.dto.AuthRequest;
 import ru.dzrnl.apigateway.presentation.dto.CreateUserDto;
 

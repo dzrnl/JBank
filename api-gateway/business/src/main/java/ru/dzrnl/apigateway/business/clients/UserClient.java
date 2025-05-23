@@ -1,8 +1,8 @@
 package ru.dzrnl.apigateway.business.clients;
 
-import ru.dzrnl.apigateway.business.dto.UserDto;
-import ru.dzrnl.apigateway.business.dto.Gender;
-import ru.dzrnl.apigateway.business.dto.HairColor;
+import ru.dzrnl.apigateway.business.dto.users.UserDto;
+import ru.dzrnl.apigateway.business.dto.users.Gender;
+import ru.dzrnl.apigateway.business.dto.users.HairColor;
 
 import java.util.List;
 
