@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.dzrnl.apigateway.business.clients.UserClient;
 import ru.dzrnl.apigateway.business.contracts.UserService;
+import ru.dzrnl.apigateway.business.dto.FriendSummaryDto;
 import ru.dzrnl.apigateway.business.dto.Gender;
 import ru.dzrnl.apigateway.business.dto.HairColor;
 import ru.dzrnl.apigateway.business.dto.UserDto;
@@ -91,5 +92,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getFriends(long userId) {
         return userClient.getUserFriends(userId);
+    }
+
+    @Override
+    public List<FriendSummaryDto> getFriendSummaries(long userId) {
+        List<UserDto> friends = userClient.getUserFriends(userId);
+        return friends.stream()
+                .map(friend -> new FriendSummaryDto(friend.getId(), friend.getName()))
+                .toList();
     }
 }

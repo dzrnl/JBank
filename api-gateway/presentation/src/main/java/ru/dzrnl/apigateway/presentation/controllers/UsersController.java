@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.dzrnl.apigateway.business.contracts.UserService;
+import ru.dzrnl.apigateway.business.dto.FriendSummaryDto;
 import ru.dzrnl.apigateway.business.dto.Gender;
 import ru.dzrnl.apigateway.business.dto.HairColor;
 import ru.dzrnl.apigateway.business.dto.UserDto;
@@ -91,5 +92,11 @@ public class UsersController {
     @PreAuthorize("hasRole('ADMIN') or @userSecurity.isOwner(#userId, authentication.name)")
     public List<UserDto> getUserFriends(@PathVariable Long userId) {
         return userService.getFriends(userId);
+    }
+
+    @GetMapping("/{userId}/friends/names")
+    @PreAuthorize("hasRole('ADMIN') or @userSecurity.isOwner(#userId, authentication.name)")
+    public List<FriendSummaryDto> getUserFriendNames(@PathVariable Long userId) {
+        return userService.getFriendSummaries(userId);
     }
 }

@@ -1,5 +1,6 @@
 package ru.dzrnl.apigateway.business.contracts;
 
+import ru.dzrnl.apigateway.business.dto.FriendSummaryDto;
 import ru.dzrnl.apigateway.business.dto.Gender;
 import ru.dzrnl.apigateway.business.dto.HairColor;
 import ru.dzrnl.apigateway.business.dto.UserDto;
@@ -26,4 +27,6 @@ public interface UserService {
     void removeFriend(Long userId, Long friendId);
 
     List<UserDto> getFriends(long userId);
+
+    List<FriendSummaryDto> getFriendSummaries(long userId);
 }
