@@ -1,4 +1,6 @@
 plugins {
+    id("org.springframework.boot") version "3.2.5"
+    id("io.spring.dependency-management") version "1.1.4"
     id("java")
 }
 
@@ -16,6 +18,10 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.38")
 
     implementation("org.springframework:spring-context:6.1.14")
+
+    implementation("org.springframework.kafka:spring-kafka")
+
+    implementation("com.fasterxml.jackson.core:jackson-databind")
 
     testCompileOnly("org.projectlombok:lombok:1.18.38")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.38")

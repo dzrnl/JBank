@@ -9,3 +9,5 @@ include("api-gateway")
 include("api-gateway:business")
 include("api-gateway:data")
 include("api-gateway:presentation")
+
+include("storage")
