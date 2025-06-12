@@ -28,6 +28,8 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
+    implementation("org.springframework.kafka:spring-kafka")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))

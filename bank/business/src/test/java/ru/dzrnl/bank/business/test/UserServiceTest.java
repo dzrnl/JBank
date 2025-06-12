@@ -6,6 +6,7 @@ import ru.dzrnl.bank.business.models.user.Gender;
 import ru.dzrnl.bank.business.models.user.HairColor;
 import ru.dzrnl.bank.business.models.user.User;
 import ru.dzrnl.bank.business.repositories.UserRepository;
+import ru.dzrnl.bank.business.services.KafkaProducerService;
 import ru.dzrnl.bank.business.services.UserServiceImpl;
 
 import java.util.*;
@@ -30,7 +31,9 @@ public class UserServiceTest {
         UserRepository mockRepo = mock(UserRepository.class);
         when(mockRepo.save(argThat(user -> user.getLogin().equals(userLogin)))).thenReturn(defaultSavedUser);
 
-        UserService userService = new UserServiceImpl(mockRepo);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        UserService userService = new UserServiceImpl(mockRepo, mockKafkaProducer);
 
         userService.createUser(userLogin, userName, age, gender, hairColor);
 
@@ -53,7 +56,9 @@ public class UserServiceTest {
         doThrow(new IllegalArgumentException())
                 .when(mockRepo).save(argThat(user -> user.getLogin().equals(userLogin)));
 
-        UserService userService = new UserServiceImpl(mockRepo);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        UserService userService = new UserServiceImpl(mockRepo, mockKafkaProducer);
 
         assertThrows(IllegalArgumentException.class,
                 () -> userService.createUser(userLogin, userName, age, gender, hairColor));
@@ -66,7 +71,9 @@ public class UserServiceTest {
         UserRepository mockRepo = mock(UserRepository.class);
         when(mockRepo.findByLogin(userLogin)).thenReturn(Optional.of(defaultUser));
 
-        UserService userService = new UserServiceImpl(mockRepo);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        UserService userService = new UserServiceImpl(mockRepo, mockKafkaProducer);
 
         User foundUser = userService.getUserByLogin(userLogin);
 
@@ -81,7 +88,9 @@ public class UserServiceTest {
         UserRepository mockRepo = mock(UserRepository.class);
         when(mockRepo.findByLogin(userLogin)).thenReturn(Optional.empty());
 
-        UserService userService = new UserServiceImpl(mockRepo);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        UserService userService = new UserServiceImpl(mockRepo, mockKafkaProducer);
 
         NoSuchElementException exception = assertThrows(NoSuchElementException.class,
                 () -> userService.getUserByLogin(userLogin));
@@ -95,7 +104,9 @@ public class UserServiceTest {
 
         UserRepository mockRepo = mock(UserRepository.class);
 
-        UserService userService = new UserServiceImpl(mockRepo);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        UserService userService = new UserServiceImpl(mockRepo, mockKafkaProducer);
 
         assertTrue(userService.getAllUsers().isEmpty());
 

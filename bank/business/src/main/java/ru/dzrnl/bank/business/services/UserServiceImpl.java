@@ -15,9 +15,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final KafkaProducerService kafkaProducerService;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, KafkaProducerService kafkaProducerService) {
         this.userRepository = userRepository;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     @Override
@@ -31,7 +33,9 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         try {
-            return userRepository.save(user);
+            User savedUser = userRepository.save(user);
+            kafkaProducerService.publishUserCreatedEvent(savedUser);
+            return savedUser;
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("User with login '" + login + "' already exists", e);
         } catch (RuntimeException e) {

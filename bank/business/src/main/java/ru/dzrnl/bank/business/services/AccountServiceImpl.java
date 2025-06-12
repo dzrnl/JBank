@@ -21,6 +21,7 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final FriendshipService friendshipService;
+    private final KafkaProducerService kafkaProducerService;
 
     /**
      * Creates a new instance of {@code AccountServiceImpl} with required dependencies.
@@ -29,10 +30,11 @@ public class AccountServiceImpl implements AccountService {
      * @param transactionRepository the repository for managing transactions
      * @param friendshipService     the service for checking friendship status between users
      */
-    public AccountServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository, FriendshipService friendshipService) {
+    public AccountServiceImpl(AccountRepository accountRepository, TransactionRepository transactionRepository, FriendshipService friendshipService, KafkaProducerService kafkaProducerService) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.friendshipService = friendshipService;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     /**
@@ -45,7 +47,10 @@ public class AccountServiceImpl implements AccountService {
     public Account createAccount(String userLogin) {
         var account = new Account(userLogin);
 
-        return accountRepository.save(account);
+        Account savedAccount = accountRepository.save(account);
+        kafkaProducerService.publishAccountCreatedEvent(savedAccount);
+
+        return savedAccount;
     }
 
     /**
@@ -102,6 +107,7 @@ public class AccountServiceImpl implements AccountService {
 
         try {
             executeTransaction(transaction, account);
+            kafkaProducerService.publishTransactionEvent(transaction);
         } catch (IllegalStateException e) {
             throw new IllegalStateException("Insufficient funds for account " + accountId);
         }
@@ -125,6 +131,7 @@ public class AccountServiceImpl implements AccountService {
         );
 
         executeTransaction(transaction, account);
+        kafkaProducerService.publishTransactionEvent(transaction);
     }
 
     /**
@@ -149,6 +156,7 @@ public class AccountServiceImpl implements AccountService {
 
         try {
             executeTransaction(fromTransaction, fromAccount);
+            kafkaProducerService.publishTransactionEvent(fromTransaction);
         } catch (IllegalStateException e) {
             throw new IllegalStateException("Insufficient funds for account " + fromAccountId);
         }
@@ -162,6 +170,7 @@ public class AccountServiceImpl implements AccountService {
         );
 
         executeTransaction(toTransaction, toAccount);
+        kafkaProducerService.publishTransactionEvent(toTransaction);
     }
 
     /**

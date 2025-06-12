@@ -9,6 +9,7 @@ import ru.dzrnl.bank.business.models.account.TransactionType;
 import ru.dzrnl.bank.business.repositories.AccountRepository;
 import ru.dzrnl.bank.business.repositories.TransactionRepository;
 import ru.dzrnl.bank.business.services.AccountServiceImpl;
+import ru.dzrnl.bank.business.services.KafkaProducerService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,7 +35,9 @@ public class AccountServiceTest {
 
         when(mockAccountRepo.save(accountToSave)).thenReturn(savedAccount);
 
-        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService, mockKafkaProducer);
 
         assertEquals(accountService.createAccount(defaultUserLogin).getOwnerLogin(), defaultUserLogin);
 
@@ -52,7 +55,9 @@ public class AccountServiceTest {
 
         when(mockAccountRepo.findById(accountId)).thenReturn(Optional.of(savedAccount));
 
-        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService, mockKafkaProducer);
 
         assertEquals(accountService.getAccount(accountId).getOwnerLogin(), defaultUserLogin);
 
@@ -69,7 +74,9 @@ public class AccountServiceTest {
 
         when(mockAccountRepo.findById(accountId)).thenReturn(Optional.empty());
 
-        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService, mockKafkaProducer);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> accountService.getAccount(accountId));
 
@@ -88,7 +95,9 @@ public class AccountServiceTest {
 
         when(mockAccountRepo.findAllByOwnerLogin(defaultUserLogin)).thenReturn(userAccounts);
 
-        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService, mockKafkaProducer);
 
         assertEquals(accountService.getAllUserAccounts(defaultUserLogin), new HashSet<>(userAccounts));
 
@@ -109,7 +118,9 @@ public class AccountServiceTest {
         when(mockTransactionRepo.save(eq(account.getId()), eq(amount), eq(TransactionType.DEPOSIT)))
                 .thenReturn(new Transaction(0, account.getId(), amount, TransactionType.DEPOSIT));
 
-        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService, mockKafkaProducer);
 
         accountService.depositMoney(account.getId(), amount);
 
@@ -131,7 +142,9 @@ public class AccountServiceTest {
         when(mockTransactionRepo.save(eq(account.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
                 .thenReturn(new Transaction(0, account.getId(), amount, TransactionType.WITHDRAW));
 
-        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService, mockKafkaProducer);
 
         accountService.withdrawMoney(account.getId(), amount);
 
@@ -153,7 +166,9 @@ public class AccountServiceTest {
         when(mockTransactionRepo.save(eq(account.getId()), eq(amount), eq(TransactionType.WITHDRAW)))
                 .thenReturn(new Transaction(0, account.getId(), amount, TransactionType.WITHDRAW));
 
-        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService, mockKafkaProducer);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> accountService.withdrawMoney(account.getId(), amount));
@@ -184,7 +199,9 @@ public class AccountServiceTest {
         when(mockTransactionRepo.save(eq(secondAccount.getId()), eq(amount), eq(TransactionType.DEPOSIT)))
                 .thenReturn(new Transaction(1, secondAccount.getId(), amount, TransactionType.DEPOSIT));
 
-        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService, mockKafkaProducer);
 
         accountService.transferMoney(firstAccount.getId(), secondAccount.getId(), amount);
 
@@ -216,7 +233,9 @@ public class AccountServiceTest {
         when(mockTransactionRepo.save(eq(secondAccount.getId()), eq(expectedTransferAmount), eq(TransactionType.DEPOSIT)))
                 .thenReturn(new Transaction(1, secondAccount.getId(), expectedTransferAmount, TransactionType.DEPOSIT));
 
-        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService, mockKafkaProducer);
 
         accountService.transferMoney(firstAccount.getId(), secondAccount.getId(), amount);
 
@@ -248,7 +267,9 @@ public class AccountServiceTest {
         when(mockTransactionRepo.save(eq(secondAccount.getId()), eq(expectedTransferAmount), eq(TransactionType.DEPOSIT)))
                 .thenReturn(new Transaction(1, secondAccount.getId(), expectedTransferAmount, TransactionType.DEPOSIT));
 
-        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService, mockKafkaProducer);
 
         accountService.transferMoney(firstAccount.getId(), secondAccount.getId(), amount);
 
@@ -272,7 +293,9 @@ public class AccountServiceTest {
         when(mockTransactionRepo.save(eq(accountId), eq(balance), eq(TransactionType.DEPOSIT)))
                 .thenReturn(new Transaction(0, accountId, balance, TransactionType.DEPOSIT));
 
-        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService);
+        KafkaProducerService mockKafkaProducer = mock(KafkaProducerService.class);
+
+        AccountService accountService = new AccountServiceImpl(mockAccountRepo, mockTransactionRepo, mockFriendshipService, mockKafkaProducer);
 
         accountService.depositMoney(accountId, balance);
 
