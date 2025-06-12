@@ -28,6 +28,10 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
+springBoot {
+    mainClass.set("ru.dzrnl.apigateway.presentation.GatewayApplication")
+}
+
 tasks.test {
     useJUnitPlatform()
 }
